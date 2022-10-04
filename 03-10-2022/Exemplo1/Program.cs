@@ -23,8 +23,11 @@ class Program
     {
         using (Activity a = s_source.StartActivity("SomeWork"))
         {
+            a.SetTag("foo", 1);
             await StepOne();
             await StepTwo();
+            a.SetTag("bar", "Helloooo");
+            a.SetTag("baz", new int[] { 1, 2, 3 });
         }
     }
 
