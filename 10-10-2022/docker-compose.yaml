@@ -1,0 +1,66 @@
+version: '3.4'
+
+services:  
+  entrypoint:
+    image: lele-sevico-exemplo:v1.0.0
+    container_name: entrypoint
+    build:
+      context: ./Exemplo5_Aspnet_ELK
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    environment:
+      - UrlService=http://servico-core-a:5000
+  
+  servico-core-a:
+    image: lele-sevico-exemplo:v1.0.0
+    container_name: servico_core_a  
+    environment:
+      - UrlService=http://servico-core-b:5000
+  
+  servico-core-b:
+    image: lele-sevico-exemplo:v1.0.0
+    container_name: servico_core_b  
+    environment:
+      - UrlService=http://servico-core-c:5000
+
+  servico-core-c:
+    image: lele-sevico-exemplo:v1.0.0
+    container_name: servico_core_c  
+    environment:
+      - UrlService=https://jsonplaceholder.typicode.com
+
+  
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.23.0 # https://github.com/open-telemetry/opentelemetry-collector-contrib/issues/3702
+    container_name: otel-logzio
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./config.yaml:/etc/otel-collector-config.yml:ro
+    ports:
+      - "4317:4317" # OTLP gRPC receiver
+
+  # elk:    
+  #   image: sebp/elk:780
+  #   ports:
+  #     - "5601:5601"
+  #     - "9200:9200"
+  #     - "5044:5044"
+  #   environment:
+  #     LOGSTASH_START: 0
+      
+  # apm:   
+  #   image: docker.elastic.co/apm/apm-server:7.8.1
+  #   ports:
+  #     - "8200:8200"
+  #   command: >
+  #     apm-server -e
+  #              -E apm-server.rum.enabled=true
+  #              -E setup.kibana.host=elk:5601
+  #              -E setup.template.settings.index.number_of_replicas=0
+  #              -E apm-server.kibana.enabled=true
+  #              -E apm-server.kibana.host=elk:5601
+  #              -E output.elasticsearch.hosts=["elk:9200"]
+
+
+  
