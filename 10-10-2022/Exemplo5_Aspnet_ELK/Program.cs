@@ -2,35 +2,39 @@ using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-var serviceName = "Lele.Servico.Exemplo";
-var serviceVersion = "v1.0.0";
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<Options>(
+    builder.Configuration.GetSection("Options"));
+
+var options = new Options();
+builder.Configuration.GetSection("Options").Bind(options);
+
 builder.Services.AddOpenTelemetryTracing(b =>
 {
     b.AddConsoleExporter()
-    .AddSource(serviceName)
+    .AddSource(options.ServiceName)
     .SetResourceBuilder(ResourceBuilder.CreateDefault()
-        .AddService(serviceName, serviceVersion))
+        .AddService(options.ServiceName, options.ServiceVersion))
     .AddHttpClientInstrumentation()
     .AddAspNetCoreInstrumentation()
+    .AddElasticsearchClientInstrumentation()
     .AddOtlpExporter(opt =>
     {
-        opt.Endpoint = new Uri("http://otel-collector:4317");
+        opt.Endpoint = new Uri(options.OtelUrl);
         opt.ExportProcessorType = ExportProcessorType.Simple;
     });
 });
 
-var urlService = builder.Configuration["UrlService"];
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
-var httpClient = new HttpClient();
-app.MapGet("/posts/{id}", async (int id) =>
+app.MapGet("/posts/{id}", async (IHttpClientFactory factory, int id) =>
 {
-    var url = $"{urlService}/posts/{id}";
-    Console.WriteLine("[url]: " + url);
-    var response = await httpClient.GetFromJsonAsync<Post>(url);
+    var client = factory.CreateClient();
+    var response = await client.GetFromJsonAsync<Post>($"{options.UrlClient}/posts/{id}");
     await Task.Delay(new Random().Next(100, 2000));
     return response;
 });

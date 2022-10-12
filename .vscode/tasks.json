@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/03-10-2022/Exemplo1/Exemplo1.csproj",
+                "${workspaceFolder}/10-10-2022/Exemplo5_Aspnet_ELK/Exemplo5_Aspnet_ELK.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/03-10-2022/Exemplo1/Exemplo1.csproj",
+                "${workspaceFolder}/10-10-2022/Exemplo5_Aspnet_ELK/Exemplo5_Aspnet_ELK.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/03-10-2022/Exemplo1/Exemplo1.csproj"
+                "${workspaceFolder}/10-10-2022/Exemplo5_Aspnet_ELK/Exemplo5_Aspnet_ELK.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
