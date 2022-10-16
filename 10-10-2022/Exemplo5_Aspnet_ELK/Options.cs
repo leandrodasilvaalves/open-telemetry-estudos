@@ -1,6 +1,9 @@
 using System.Text.Json;
 internal class Options
 {
+    private static Options _options;
+    private Options() { }
+
     private string _serviceName;
     public string ServiceName
     {
@@ -18,6 +21,15 @@ internal class Options
     public override string ToString()
     {
         return JsonSerializer.Serialize(this);
+    }
+
+    public static Options GetInstance()
+    {
+        if (_options == null)
+        {
+            _options = new Options();
+        }
+        return _options;
     }
 }
 

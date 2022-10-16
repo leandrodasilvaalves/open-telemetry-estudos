@@ -1,25 +1,19 @@
 using System.Diagnostics;
-using Microsoft.OpenApi.Models;
 using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Text.Json;
 using System.Text;
+using Exemplo5_Aspnet_ELK;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo Opentelemetry", Description = "", Version = "v1" });
-});
-
-builder.Services.Configure<Options>(
-    builder.Configuration.GetSection("Options"));
-
-var options = new Options();
-builder.Configuration.GetSection("Options").Bind(options);
-
+var options = builder.Services.GetOptions(builder.Configuration);
+builder.Services
+    .AddEndpointsApiExplorer()
+    .AddRepositories()
+    .AddClients()
+    .AddSwagger(options);
 
 builder.Services.AddOpenTelemetryTracing(providerBuilder =>
 {
@@ -43,17 +37,11 @@ builder.Services.AddOpenTelemetryTracing(providerBuilder =>
     });
 });
 
-builder.Services.AddHttpClient();
-
 var app = builder.Build();
-app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "APISaudacao v1");
-});
+app.ConfigureSwagger(options);
 
+#region [endpoints]
 var source = new ActivitySource(options.ServiceName);
-
 app.MapGet("/posts/{id}", async (IHttpClientFactory factory, int id) =>
 {
     var activity = source.StartActivity($"GET /posts/{id}");
@@ -81,10 +69,11 @@ app.MapPost("/posts", async (IHttpClientFactory factory, Post post) =>
     var json = JsonSerializer.Serialize(post);
     var response = await client.PostAsync($"{options.UrlClient}/posts", new StringContent(json, Encoding.UTF8, "application/json"));
     await Task.Delay(new Random().Next(100, 2000));
-    
+
     activity.SetTag("after_request", $"post_id:{post.Id}");
 
-    return response;
+    return Results.Ok(post);
 });
+#endregion
 
 app.Run();
