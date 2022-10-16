@@ -3,14 +3,15 @@ using Microsoft.OpenApi.Models;
 using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-
+using System.Text.Json;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "APISaudacao", Description = "Teste com Minimal APIs", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo Opentelemetry", Description = "", Version = "v1" });
 });
 
 builder.Services.Configure<Options>(
@@ -64,6 +65,24 @@ app.MapGet("/posts/{id}", async (IHttpClientFactory factory, int id) =>
     var response = await client.GetFromJsonAsync<Post>($"{options.UrlClient}/posts/{id}");
     await Task.Delay(new Random().Next(100, 2000));
     activity.SetTag("after_request", $"post_id:{id}");
+
+    return response;
+});
+
+app.MapPost("/posts", async (IHttpClientFactory factory, Post post) =>
+{
+    var activity = source.StartActivity($"POST /posts");
+
+    var client = factory.CreateClient();
+    activity.SetTag("created_client", client.MaxResponseContentBufferSize);
+
+    activity.SetTag("before_request", $"post_id:{post.Id}");
+
+    var json = JsonSerializer.Serialize(post);
+    var response = await client.PostAsync($"{options.UrlClient}/posts", new StringContent(json, Encoding.UTF8, "application/json"));
+    await Task.Delay(new Random().Next(100, 2000));
+    
+    activity.SetTag("after_request", $"post_id:{post.Id}");
 
     return response;
 });
