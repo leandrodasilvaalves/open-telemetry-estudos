@@ -56,7 +56,7 @@ app.MapGet("/posts", async (IPostService service) =>
     return response;
 });
 
-app.MapGet("/posts/{id}", async (IPostService service, int id) =>
+app.MapGet("/posts/{id}", async (IPostService service, Guid id) =>
 {
     var activity = source.StartActivity($"GET /posts/{id}");
     activity.SetTag("before_request", $"post_id:{id}");
@@ -81,4 +81,5 @@ app.MapPost("/posts", async (IPostService service, Post post) =>
 });
 #endregion
 
-app.Run();
+await app.InitAsync();
+await app.RunAsync();

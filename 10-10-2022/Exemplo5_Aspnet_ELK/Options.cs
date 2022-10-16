@@ -19,6 +19,7 @@ internal class Options
     public AppMode Mode { get; set; }
     public JaegerOpt Jaeger { get; set; }
     public ZipkinOpt Zipkin { get; set; }
+    public SeedOptions Seed { get; set; }
 
     public override string ToString()
     {
@@ -42,4 +43,10 @@ internal class ZipkinOpt
 
     public Uri Uri => new Uri($"{Url}:{Port}/api/v2/spans");
 
+}
+
+internal class SeedOptions
+{
+    public int Records { get; set; }
+    public int MaxBodyWords { get; set; }
 }

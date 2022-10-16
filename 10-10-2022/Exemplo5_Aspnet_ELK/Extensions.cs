@@ -28,6 +28,7 @@ namespace Exemplo5_Aspnet_ELK
         internal static IServiceCollection AddRepositories(this IServiceCollection self)
         {
             self.AddSingleton<IPostRepository, PostRepository>();
+            self.AddAsyncInitializer<Seed>();
             return self;
         }
 
@@ -54,5 +55,6 @@ namespace Exemplo5_Aspnet_ELK
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{options.ServiceName} - Opentelemetry - v1");
             });
         }
+
     }
 }

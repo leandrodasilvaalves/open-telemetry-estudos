@@ -60,6 +60,8 @@ services:
       - Options__Jaeger__Port=6831
       - Options__Zipkin__Url=http://zipkin
       - Options__Zipkin__Port=9411
+      - Options__Seed__Records=10
+      - Options__Seed__MaxBodyWords=100
 
   # otel-collector:
   #   image: otel/opentelemetry-collector-contrib:0.23.0

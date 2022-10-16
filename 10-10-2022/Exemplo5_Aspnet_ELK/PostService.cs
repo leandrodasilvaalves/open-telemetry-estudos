@@ -5,7 +5,7 @@ namespace Exemplo5_Aspnet_ELK
     internal interface IPostService
     {
         Task<IEnumerable<Post>> GetAll();
-        Task<Post> GetById(int id);
+        Task<Post> GetById(Guid id);
         Task Include(Post post);
     }
 
@@ -27,7 +27,7 @@ namespace Exemplo5_Aspnet_ELK
             return _options.IsClient() ? await _client.GetAll() : _repository.GetAll();
         }
 
-        public async Task<Post> GetById(int id)
+        public async Task<Post> GetById(Guid id)
         {
             return _options.IsClient() ? await _client.GetById(id) : _repository.GetById(id);
         }

@@ -7,7 +7,7 @@ namespace Exemplo5_Aspnet_ELK
     internal interface IPostClient
     {
         Task<IEnumerable<Post>> GetAll();
-        Task<Post> GetById(int id);
+        Task<Post> GetById(Guid id);
         Task Post(Post post);
     }
 
@@ -30,7 +30,7 @@ namespace Exemplo5_Aspnet_ELK
             return response;
         }
 
-        public async Task<Post> GetById(int id)
+        public async Task<Post> GetById(Guid id)
         {
             var response = await _client.GetFromJsonAsync<Post>($"{_options.UrlClient}/posts/{id}");
             await Task.Delay(new Random().Next(100, _options.MaxDelayMileseconds));
