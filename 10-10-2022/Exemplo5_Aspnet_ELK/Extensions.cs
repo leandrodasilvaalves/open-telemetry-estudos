@@ -4,12 +4,15 @@ namespace Exemplo5_Aspnet_ELK
 {
     internal static class Extensions
     {
+        internal static IServiceCollection AddOptions(this IServiceCollection self, IConfiguration configuration)
+        {
+            self.Configure<Options>(configuration.GetSection("Options"));
+            return self;
+        }
+
         internal static Options GetOptions(this IServiceCollection self, IConfiguration configuration)
         {
-            self.Configure<Options>(
-            configuration.GetSection("Options"));
-
-            var options = Options.GetInstance();
+            var options = new Options();
             configuration.GetSection("Options").Bind(options);
             return options;
         }
@@ -17,6 +20,7 @@ namespace Exemplo5_Aspnet_ELK
         internal static IServiceCollection AddClients(this IServiceCollection self)
         {
             self.AddHttpClient();
+            self.AddSingleton<IPostClient, PostClient>();
             return self;
         }
 
@@ -24,6 +28,12 @@ namespace Exemplo5_Aspnet_ELK
         internal static IServiceCollection AddRepositories(this IServiceCollection self)
         {
             self.AddSingleton<IPostRepository, PostRepository>();
+            return self;
+        }
+
+        internal static IServiceCollection AddServices(this IServiceCollection self)
+        {
+            self.AddSingleton<IPostService, PostService>();
             return self;
         }
 

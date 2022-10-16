@@ -1,8 +1,9 @@
 using System.Text.Json;
+using Exemplo5_Aspnet_ELK;
+
 internal class Options
 {
-    private static Options _options;
-    private Options() { }
+    public Options() { }
 
     private string _serviceName;
     public string ServiceName
@@ -12,9 +13,10 @@ internal class Options
     }
 
     public string ServiceVersion { get; set; }
-
     public string UrlClient { get; set; }
+    public int MaxDelayMileseconds { get; set; }
     public string OtelUrl { get; set; }
+    public AppMode Mode { get; set; }
     public JaegerOpt Jaeger { get; set; }
     public ZipkinOpt Zipkin { get; set; }
 
@@ -23,14 +25,8 @@ internal class Options
         return JsonSerializer.Serialize(this);
     }
 
-    public static Options GetInstance()
-    {
-        if (_options == null)
-        {
-            _options = new Options();
-        }
-        return _options;
-    }
+    public bool IsServer() => Mode == AppMode.SERVER;
+    public bool IsClient() => Mode == AppMode.CLIENT;
 }
 
 internal class JaegerOpt

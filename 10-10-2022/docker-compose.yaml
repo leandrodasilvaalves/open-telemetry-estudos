@@ -11,6 +11,8 @@ services:
       - 5000:5000
     environment:
       - Options__ServiceName=Entrypoint
+      - Options__Mode=CLIENT
+      - Options__MaxDelayMileseconds=800
       - Options__UrlClient=http://servico-core-a:5000
       - Options__OtelUrl=http://otel-collector:4317
       - Options__Jaeger__Url=jaeger
@@ -23,6 +25,8 @@ services:
     container_name: servico_core_a
     environment:
       - Options__ServiceName=Servico_A
+      - Options__Mode=CLIENT
+      - Options__MaxDelayMileseconds=1000
       - Options__UrlClient=http://servico-core-b:5000
       - Options__OtelUrl=http://otel-collector:4317
       - Options__Jaeger__Url=jaeger
@@ -35,6 +39,8 @@ services:
     container_name: servico_core_b
     environment:
       - Options__ServiceName=Servico_B
+      - Options__Mode=CLIENT
+      - Options__MaxDelayMileseconds=400
       - Options__UrlClient=http://servico-core-c:5000
       - Options__OtelUrl=http://otel-collector:4317
       - Options__Jaeger__Url=jaeger
@@ -47,7 +53,8 @@ services:
     container_name: servico_core_c
     environment:
       - Options__ServiceName=Servico_C
-      - Options__UrlClient=https://jsonplaceholder.typicode.com
+      - Options__Mode=SERVER
+      - Options__MaxDelayMileseconds=1800
       - Options__OtelUrl=http://otel-collector:4317
       - Options__Jaeger__Url=jaeger
       - Options__Jaeger__Port=6831

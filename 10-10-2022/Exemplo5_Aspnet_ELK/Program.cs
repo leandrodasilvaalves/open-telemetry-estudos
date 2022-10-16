@@ -2,17 +2,19 @@ using System.Diagnostics;
 using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using System.Text.Json;
-using System.Text;
 using Exemplo5_Aspnet_ELK;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var options = builder.Services.GetOptions(builder.Configuration);
+var options = builder.Services
+    .AddOptions(builder.Configuration)
+    .GetOptions(builder.Configuration);
+
 builder.Services
     .AddEndpointsApiExplorer()
     .AddRepositories()
     .AddClients()
+    .AddServices()
     .AddSwagger(options);
 
 builder.Services.AddOpenTelemetryTracing(providerBuilder =>
@@ -42,37 +44,40 @@ app.ConfigureSwagger(options);
 
 #region [endpoints]
 var source = new ActivitySource(options.ServiceName);
-app.MapGet("/posts/{id}", async (IHttpClientFactory factory, int id) =>
+app.MapGet("/posts", async (IPostService service) =>
 {
-    var activity = source.StartActivity($"GET /posts/{id}");
+    var activity = source.StartActivity("GET /posts");
+    activity.SetTag("before_request", "get all posts");
 
-    var client = factory.CreateClient();
-    activity.SetTag("created_client", client.MaxResponseContentBufferSize);
+    var response = await service.GetAll();
+    await Task.Delay(new Random().Next(100, options.MaxDelayMileseconds));
 
-    activity.SetTag("before_request", $"post_id:{id}");
-    var response = await client.GetFromJsonAsync<Post>($"{options.UrlClient}/posts/{id}");
-    await Task.Delay(new Random().Next(100, 2000));
-    activity.SetTag("after_request", $"post_id:{id}");
-
+    activity.SetTag("after_request", "get all posts");
     return response;
 });
 
-app.MapPost("/posts", async (IHttpClientFactory factory, Post post) =>
+app.MapGet("/posts/{id}", async (IPostService service, int id) =>
+{
+    var activity = source.StartActivity($"GET /posts/{id}");
+    activity.SetTag("before_request", $"post_id:{id}");
+
+    var response = await service.GetById(id);
+    await Task.Delay(new Random().Next(100, options.MaxDelayMileseconds));
+
+    activity.SetTag("after_request", $"post_id:{id}");
+    return response;
+});
+
+app.MapPost("/posts", async (IPostService service, Post post) =>
 {
     var activity = source.StartActivity($"POST /posts");
-
-    var client = factory.CreateClient();
-    activity.SetTag("created_client", client.MaxResponseContentBufferSize);
-
     activity.SetTag("before_request", $"post_id:{post.Id}");
 
-    var json = JsonSerializer.Serialize(post);
-    var response = await client.PostAsync($"{options.UrlClient}/posts", new StringContent(json, Encoding.UTF8, "application/json"));
-    await Task.Delay(new Random().Next(100, 2000));
+    await service.Include(post);
+    await Task.Delay(new Random().Next(100, options.MaxDelayMileseconds));
 
     activity.SetTag("after_request", $"post_id:{post.Id}");
-
-    return Results.Ok(post);
+    return Results.Ok();
 });
 #endregion
 
