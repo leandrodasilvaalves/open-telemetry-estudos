@@ -8,7 +8,7 @@ services:
       context: ./Exemplo5_Aspnet_ELK
       dockerfile: Dockerfile
     ports:
-      - 5000:5000
+      - 80:5000
     environment:
       - Options__ServiceName=Entrypoint
       - Options__Mode=CLIENT
@@ -55,47 +55,84 @@ services:
       - Options__ServiceName=Servico_C
       - Options__Mode=SERVER
       - Options__MaxDelayMileseconds=1800
-      - Options__OtelUrl=http://otel-collector:4317
+      - Options__OtelUrl=http://otel-collector:4317    
       - Options__Jaeger__Url=jaeger
       - Options__Jaeger__Port=6831
       - Options__Zipkin__Url=http://zipkin
       - Options__Zipkin__Port=9411
       - Options__Seed__Records=10
       - Options__Seed__MaxBodyWords=100
+  
 
-  # otel-collector:
-  #   image: otel/opentelemetry-collector-contrib:0.23.0
-  #   container_name: otel-collector
-  #   command: ["--config=/etc/otel-collector-config.yml"]
-  #   volumes:
-  #     - ./config.yaml:/etc/otel-collector-config.yml:ro
-  #   ports:
-  #     - "4317:4317"
+  collector:
+    image: otel/opentelemetry-collector-contrib:0.23.0
+    container_name: collector
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./config.yaml:/etc/otel-collector-config.yml:ro
+    ports:
+      - "4317:4317"    
+    depends_on:
+      - apm-server
 
+  apm-server:
+    image: docker.elastic.co/apm/apm-server:7.14.0
+    container_name: apm-server
+    hostname: apm-server
+    depends_on:
+      - elasticsearch
+      - kibana
+    cap_add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
+    cap_drop: ["ALL"]
+    ports:
+    - 8200:8200
+    command: >
+       apm-server -e
+         -E apm-server.rum.enabled=true
+         -E setup.kibana.host=kibana:5601
+         -E setup.template.settings.index.number_of_replicas=0
+         -E apm-server.kibana.enabled=true
+         -E apm-server.kibana.host=kibana:5601
+         -E output.elasticsearch.hosts=["elasticsearch:9200"]
+    healthcheck:
+      interval: 10s
+      retries: 20
+      test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:8200/
 
-  # apm:   
-  #   image: docker.elastic.co/apm/apm-server:7.8.1
-  #   ports:
-  #     - "8200:8200"
-  #   command: >
-  #     apm-server -e
-  #              -E apm-server.rum.enabled=true
-  #              -E setup.kibana.host=elk:5601
-  #              -E setup.template.settings.index.number_of_replicas=0
-  #              -E apm-server.kibana.enabled=true
-  #              -E apm-server.kibana.host=elk:5601
-  #              -E output.elasticsearch.hosts=["elk:9200"] 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    container_name: elasticsearch
+    environment:
+    - node.name=es01
+    - bootstrap.memory_lock=true
+    - cluster.name=docker-cluster
+    - discovery.type=single-node
+    - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ulimits:
+      memlock:
+        hard: -1
+        soft: -1
+    ports:
+    - 9200:9200
+    healthcheck:
+      interval: 10s
+      retries: 20
+      test: curl -s http://localhost:9200/_cluster/health | grep -vq '"status":"red"'
 
-
-  # elk:    
-  #   image: sebp/elk:780
-  #   ports:
-  #     - "5601:5601"
-  #     - "9200:9200"
-  #     - "5044:5044"
-  #   environment:
-  #     LOGSTASH_START: 0
-
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.14.0
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports:
+    - 5601:5601
+    healthcheck:
+      interval: 10s
+      retries: 20
+      test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:5601/api/status
 
   jaeger:
     image: jaegertracing/all-in-one:latest
@@ -108,7 +145,7 @@ services:
       - 6832:6832/udp
       - 5778:5778
       - 16686:16686 #web-port
-      - 4317:4317
+      - 4316:4317
       - 4318:4318
       - 14250:14250
       - 14268:14268
