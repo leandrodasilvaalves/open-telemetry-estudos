@@ -8,13 +8,13 @@ services:
       context: ./Exemplo5_Aspnet_ELK
       dockerfile: Dockerfile
     ports:
-      - 80:5000
+      - 8080:5000
     environment:
       - Options__ServiceName=Entrypoint
       - Options__Mode=CLIENT
       - Options__MaxDelayMileseconds=800
       - Options__UrlClient=http://servico-core-a:5000
-      - Options__OtelUrl=http://otel-collector:4317
+      - Options__OtelUrl=http://collector:4317
       - Options__Jaeger__Url=jaeger
       - Options__Jaeger__Port=6831
       - Options__Zipkin__Url=http://zipkin
@@ -25,53 +25,24 @@ services:
     container_name: servico_core_a
     environment:
       - Options__ServiceName=Servico_A
-      - Options__Mode=CLIENT
-      - Options__MaxDelayMileseconds=1000
-      - Options__UrlClient=http://servico-core-b:5000
-      - Options__OtelUrl=http://otel-collector:4317
-      - Options__Jaeger__Url=jaeger
-      - Options__Jaeger__Port=6831
-      - Options__Zipkin__Url=http://zipkin
-      - Options__Zipkin__Port=9411
-
-  servico-core-b:
-    image: lele-sevico-exemplo:v1.0.0
-    container_name: servico_core_b
-    environment:
-      - Options__ServiceName=Servico_B
-      - Options__Mode=CLIENT
-      - Options__MaxDelayMileseconds=400
-      - Options__UrlClient=http://servico-core-c:5000
-      - Options__OtelUrl=http://otel-collector:4317
-      - Options__Jaeger__Url=jaeger
-      - Options__Jaeger__Port=6831
-      - Options__Zipkin__Url=http://zipkin
-      - Options__Zipkin__Port=9411
-
-  servico-core-c:
-    image: lele-sevico-exemplo:v1.0.0
-    container_name: servico_core_c
-    environment:
-      - Options__ServiceName=Servico_C
       - Options__Mode=SERVER
       - Options__MaxDelayMileseconds=1800
-      - Options__OtelUrl=http://otel-collector:4317    
+      - Options__OtelUrl=http://collector:4317
       - Options__Jaeger__Url=jaeger
       - Options__Jaeger__Port=6831
       - Options__Zipkin__Url=http://zipkin
       - Options__Zipkin__Port=9411
       - Options__Seed__Records=10
       - Options__Seed__MaxBodyWords=100
-  
 
   collector:
     image: otel/opentelemetry-collector-contrib:0.23.0
     container_name: collector
-    command: ["--config=/etc/otel-collector-config.yml"]
+    command: [ "--config=/etc/otel-collector-config.yml" ]
     volumes:
       - ./config.yaml:/etc/otel-collector-config.yml:ro
     ports:
-      - "4317:4317"    
+      - "4317:4317"
     depends_on:
       - apm-server
 
@@ -134,26 +105,26 @@ services:
       retries: 20
       test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:5601/api/status
 
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    container_name: jaeger
-    environment:
-      - COLLECTOR_ZIPKIN_HOST_PORT=9411
-      - COLLECTOR_OTLP_ENABLED=true
-    ports:
-      - 6831:6831/udp
-      - 6832:6832/udp
-      - 5778:5778
-      - 16686:16686 #web-port
-      - 4316:4317
-      - 4318:4318
-      - 14250:14250
-      - 14268:14268
-      - 14269:14269
-      - 9411:9411
+  # jaeger:
+  #   image: jaegertracing/all-in-one:latest
+  #   container_name: jaeger
+  #   environment:
+  #     - COLLECTOR_ZIPKIN_HOST_PORT=9411
+  #     - COLLECTOR_OTLP_ENABLED=true
+  #   ports:
+  #     - 6831:6831/udp
+  #     - 6832:6832/udp
+  #     - 5778:5778
+  #     - 16686:16686 #web-port
+  #     - 4316:4317
+  #     - 4318:4318
+  #     - 14250:14250
+  #     - 14268:14268
+  #     - 14269:14269
+  #     - 9411:9411
 
-  zipkin:
-    image: openzipkin/zipkin
-    container_name: zipkin
-    ports:
-      - 9412:9411
+  # zipkin:
+  #   image: openzipkin/zipkin
+  #   container_name: zipkin
+  #   ports:
+  #     - 9412:9411

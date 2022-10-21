@@ -1,5 +1,5 @@
 receivers:
-  zipkin:
+  # zipkin:
   otlp:
     protocols:
       grpc:
@@ -13,13 +13,12 @@ exporters:
   logging:
     logLevel: debug
     
-  zipkin:
-    endpoint: "http://zipkin:9411/api/v2/spans"
+  # zipkin:
+  #   endpoint: "http://zipkin:9411/api/v2/spans"
 
   otlp/elastic:
-    endpoint: http://apm:8200
-    # tls:
-    #   insecure: true
+    endpoint: apm-server:8200
+    insecure: true
 
 extensions:
   health_check:
@@ -33,6 +32,8 @@ service:
     #   receivers: [ otlp ]
 
     traces:
-      receivers: [ zipkin, otlp ]
+      # receivers: [ zipkin, otlp ]
+      receivers: [ otlp ]
       processors: [ batch ]
-      exporters: [ logging, zipkin, otlp/elastic ]
+      # exporters: [ logging, zipkin, otlp/elastic ]
+      exporters: [ logging, otlp/elastic ]

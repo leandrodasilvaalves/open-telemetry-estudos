@@ -25,13 +25,13 @@ builder.Services.AddOpenTelemetryTracing(providerBuilder =>
         .AddService(options.ServiceName, options.ServiceVersion))
     .AddHttpClientInstrumentation()
     .AddAspNetCoreInstrumentation()
-    .AddElasticsearchClientInstrumentation()
-    .AddJaegerExporter(opt =>
-    {
-        opt.AgentHost = options.Jaeger.Url;
-        opt.AgentPort = options.Jaeger.Port;
-    })
-    .AddZipkinExporter(opt => opt.Endpoint = options.Zipkin.Uri)
+    // .AddElasticsearchClientInstrumentation()
+    // .AddJaegerExporter(opt =>
+    // {
+    //     opt.AgentHost = options.Jaeger.Url;
+    //     opt.AgentPort = options.Jaeger.Port;
+    // })
+    // .AddZipkinExporter(opt => opt.Endpoint = options.Zipkin.Uri)
     .AddOtlpExporter(opt =>
     {
         opt.Endpoint = new Uri(options.OtelUrl);
