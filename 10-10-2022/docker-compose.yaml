@@ -1,5 +1,16 @@
 version: '3.4'
 
+networks:
+  micro-services:
+    driver: bridge
+  optl-collector:
+    driver: bridge
+  elk:
+    driver: bridge
+  apm:
+    driver: bridge
+    
+
 services:
   entrypoint:
     image: lele-sevico-exemplo:v1.0.0
@@ -15,6 +26,9 @@ services:
       - Options__MaxDelayMileseconds=800
       - Options__UrlClient=http://servico-core-a:5000
       - Options__OtelUrl=http://collector:4317
+    networks:
+      - micro-services
+      - optl-collector
 
   servico-core-a:
     image: lele-sevico-exemplo:v1.0.0
@@ -25,6 +39,9 @@ services:
       - Options__MaxDelayMileseconds=1800
       - Options__UrlClient=http://servico-core-b:5000
       - Options__OtelUrl=http://collector:4317
+    networks:
+      - micro-services
+      - optl-collector
 
   servico-core-b:
     image: lele-sevico-exemplo:v1.0.0
@@ -36,6 +53,9 @@ services:
       - Options__OtelUrl=http://collector:4317
       - Options__Seed__Records=10
       - Options__Seed__MaxBodyWords=100
+    networks:
+      - micro-services
+      - optl-collector
 
   collector:
     image: otel/opentelemetry-collector-contrib:0.23.0
@@ -47,6 +67,9 @@ services:
       - "4317:4317"
     depends_on:
       - apm-server
+    networks:
+      - optl-collector
+      - apm
 
   apm-server:
     image: docker.elastic.co/apm/apm-server:7.14.0
@@ -71,6 +94,9 @@ services:
       interval: 10s
       retries: 20
       test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:8200/
+    networks:
+      - apm
+      - elk
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
@@ -91,6 +117,8 @@ services:
       interval: 10s
       retries: 20
       test: curl -s http://localhost:9200/_cluster/health | grep -vq '"status":"red"'
+    networks:    
+      - elk
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.14.0
@@ -106,6 +134,8 @@ services:
       interval: 10s
       retries: 20
       test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:5601/api/status
+    networks:    
+      - elk
 
   # jaeger:
   #   image: jaegertracing/all-in-one:latest
