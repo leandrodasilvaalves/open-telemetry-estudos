@@ -15,23 +15,25 @@ services:
       - Options__MaxDelayMileseconds=800
       - Options__UrlClient=http://servico-core-a:5000
       - Options__OtelUrl=http://collector:4317
-      - Options__Jaeger__Url=jaeger
-      - Options__Jaeger__Port=6831
-      - Options__Zipkin__Url=http://zipkin
-      - Options__Zipkin__Port=9411
 
   servico-core-a:
     image: lele-sevico-exemplo:v1.0.0
     container_name: servico_core_a
     environment:
       - Options__ServiceName=Servico_A
-      - Options__Mode=SERVER
+      - Options__Mode=CLIENT
       - Options__MaxDelayMileseconds=1800
+      - Options__UrlClient=http://servico-core-b:5000
       - Options__OtelUrl=http://collector:4317
-      - Options__Jaeger__Url=jaeger
-      - Options__Jaeger__Port=6831
-      - Options__Zipkin__Url=http://zipkin
-      - Options__Zipkin__Port=9411
+
+  servico-core-b:
+    image: lele-sevico-exemplo:v1.0.0
+    container_name: servico_core_b
+    environment:
+      - Options__ServiceName=Servico_B
+      - Options__Mode=SERVER
+      - Options__MaxDelayMileseconds=1200
+      - Options__OtelUrl=http://collector:4317
       - Options__Seed__Records=10
       - Options__Seed__MaxBodyWords=100
 

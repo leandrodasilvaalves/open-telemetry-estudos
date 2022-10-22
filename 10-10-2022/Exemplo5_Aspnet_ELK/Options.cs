@@ -17,8 +17,6 @@ internal class Options
     public int MaxDelayMileseconds { get; set; }
     public string OtelUrl { get; set; }
     public AppMode Mode { get; set; }
-    public JaegerOpt Jaeger { get; set; }
-    public ZipkinOpt Zipkin { get; set; }
     public SeedOptions Seed { get; set; }
 
     public override string ToString()
@@ -28,21 +26,6 @@ internal class Options
 
     public bool IsServer() => Mode == AppMode.SERVER;
     public bool IsClient() => Mode == AppMode.CLIENT;
-}
-
-internal class JaegerOpt
-{
-    public string Url { get; set; }
-    public int Port { get; set; }
-}
-
-internal class ZipkinOpt
-{
-    public string Url { get; set; }
-    public int Port { get; set; }
-
-    public Uri Uri => new Uri($"{Url}:{Port}/api/v2/spans");
-
 }
 
 internal class SeedOptions
