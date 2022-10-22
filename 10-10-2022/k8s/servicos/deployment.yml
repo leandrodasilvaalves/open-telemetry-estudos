@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: servico-a-deployment
+spec:
+  selector:
+    matchLabels:
+      app: servico-a
+  template:
+    metadata:
+      labels:
+        app: servico-a
+    spec:
+      containers:
+        - name: servico-a
+          image: lele-sevico-exemplo:v1.0.0
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+          - containerPort: 5000
+          env:
+          - name: Options__ServiceName
+            value: "Servico_A"
+          - name: Options__Mode
+            value: "SERVER"
+          - name: Options__MaxDelayMileseconds
+            value: "1800"
+          - name: Options__Seed__Records
+            value: "10"
+          - name: Options__Seed__MaxBodyWords
+            value: "100"
+      imagePullSecrets:
+      - name: container-registry
