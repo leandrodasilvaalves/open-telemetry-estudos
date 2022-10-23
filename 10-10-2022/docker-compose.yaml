@@ -1,13 +1,15 @@
 version: '3.4'
 
 networks:
-  micro-services:
+  mservices:
     driver: bridge
-  optl-collector:
+  otel-collector:
     driver: bridge
   elk:
     driver: bridge
   apm:
+    driver: bridge
+  others:
     driver: bridge
     
 
@@ -27,8 +29,8 @@ services:
       - Options__UrlClient=http://servico-core-a:5000
       - Options__OtelUrl=http://collector:4317
     networks:
-      - micro-services
-      - optl-collector
+      - mservices
+      - otel-collector
 
   servico-core-a:
     image: lele-sevico-exemplo:v1.0.0
@@ -40,8 +42,8 @@ services:
       - Options__UrlClient=http://servico-core-b:5000
       - Options__OtelUrl=http://collector:4317
     networks:
-      - micro-services
-      - optl-collector
+      - mservices
+      - otel-collector
 
   servico-core-b:
     image: lele-sevico-exemplo:v1.0.0
@@ -54,8 +56,8 @@ services:
       - Options__Seed__Records=10
       - Options__Seed__MaxBodyWords=100
     networks:
-      - micro-services
-      - optl-collector
+      - mservices
+      - otel-collector
 
   collector:
     image: otel/opentelemetry-collector-contrib:0.23.0
@@ -68,8 +70,9 @@ services:
     depends_on:
       - apm-server
     networks:
-      - optl-collector
+      - otel-collector
       - apm
+      - others
 
   apm-server:
     image: docker.elastic.co/apm/apm-server:7.14.0
@@ -137,26 +140,30 @@ services:
     networks:    
       - elk
 
-  # jaeger:
-  #   image: jaegertracing/all-in-one:latest
-  #   container_name: jaeger
-  #   environment:
-  #     - COLLECTOR_ZIPKIN_HOST_PORT=9411
-  #     - COLLECTOR_OTLP_ENABLED=true
-  #   ports:
-  #     - 6831:6831/udp
-  #     - 6832:6832/udp
-  #     - 5778:5778
-  #     - 16686:16686 #web-port
-  #     - 4316:4317
-  #     - 4318:4318
-  #     - 14250:14250
-  #     - 14268:14268
-  #     - 14269:14269
-  #     - 9411:9411
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=9411
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - 6831:6831/udp
+      - 6832:6832/udp
+      - 5778:5778
+      - 16686:16686 #web-port
+      - 4316:4317
+      - 4318:4318
+      - 14250:14250
+      - 14268:14268
+      - 14269:14269
+      - 9411:9411
+    networks:
+      - others
 
-  # zipkin:
-  #   image: openzipkin/zipkin
-  #   container_name: zipkin
-  #   ports:
-  #     - 9412:9411
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - 9412:9411
+    networks:
+      - others

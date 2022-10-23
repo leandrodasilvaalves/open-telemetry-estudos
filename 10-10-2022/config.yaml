@@ -11,9 +11,16 @@ processors:
 exporters:
   logging:
     logLevel: debug
+  
+  zipkin:
+    endpoint: "http://zipkin:9411/api/v2/spans"
 
   otlp/elastic:
     endpoint: apm-server:8200
+    insecure: true
+
+  jaeger:
+    endpoint: jaeger:14250
     insecure: true
 
 extensions:
@@ -26,7 +33,7 @@ service:
     traces:
       receivers: [ otlp ]
       processors: [ batch ]
-      exporters: [ logging, otlp/elastic ]
+      exporters: [ logging, zipkin, otlp/elastic, jaeger ]
     metrics:
       receivers: [otlp]
       exporters: [logging, otlp/elastic]
