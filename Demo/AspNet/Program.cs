@@ -2,7 +2,6 @@ using System.Diagnostics;
 using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Exemplo5_Aspnet_ELK;
 
 var builder = WebApplication.CreateBuilder(args);
 

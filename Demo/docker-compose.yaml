@@ -18,7 +18,7 @@ services:
     image: lele-sevico-exemplo:v1.0.0
     container_name: entrypoint
     build:
-      context: ./Exemplo5_Aspnet_ELK
+      context: ./AspNet
       dockerfile: Dockerfile
     ports:
       - 8080:5000

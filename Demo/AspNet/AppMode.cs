@@ -1,4 +1,4 @@
-namespace Exemplo5_Aspnet_ELK
+namespace AspNet
 {
     public enum AppMode
     {
