@@ -2,6 +2,13 @@ using Microsoft.OpenApi.Models;
 
 internal static class CustomExtensions
 {
+    internal static IServiceCollection AddEndpointsApi(this IServiceCollection self)
+    {
+        self.AddControllers();
+        self.AddEndpointsApiExplorer();
+        return self;
+    }
+
     internal static IServiceCollection AddOptions(this IServiceCollection self, IConfiguration configuration)
     {
         self.Configure<Options>(configuration.GetSection("Options"));
@@ -23,9 +30,19 @@ internal static class CustomExtensions
     }
 
 
-    internal static IServiceCollection AddRepositories(this IServiceCollection self)
+    internal static IServiceCollection AddRepositories(this IServiceCollection self, Options options)
     {
+        if (options.UseCache)
+        {
+            self.AddDistributedRedisCache(opt =>
+            {
+                opt.Configuration = options.Redis.ConnectionString;
+                opt.InstanceName = options.Redis.InstanceName;
+            });
+        }
+
         self.AddSingleton<IPostRepository, PostRepository>();
+        self.Decorate<IPostRepository, CacheRepository>();
         self.AddAsyncInitializer<Seed>();
         return self;
     }

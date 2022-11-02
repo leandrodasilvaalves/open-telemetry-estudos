@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Options;
 
-internal interface IPostService
+public interface IPostService
 {
     Task<IEnumerable<Post>> GetAll();
     Task<Post> GetById(Guid id);

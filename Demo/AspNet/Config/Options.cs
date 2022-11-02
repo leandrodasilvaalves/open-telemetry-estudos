@@ -1,7 +1,6 @@
 using System.Text.Json;
-using AspNet;
 
-internal class Options
+public class Options
 {
     public Options() { }
 
@@ -18,6 +17,8 @@ internal class Options
     public string OtelUrl { get; set; }
     public AppMode Mode { get; set; }
     public SeedOptions Seed { get; set; }
+    public bool UseCache { get; set; } = false;
+    public RedisOptions Redis { get; set; }
 
     public override string ToString()
     {
@@ -28,8 +29,15 @@ internal class Options
     public bool IsClient() => Mode == AppMode.CLIENT;
 }
 
-internal class SeedOptions
+public class SeedOptions
 {
     public int Records { get; set; }
     public int MaxBodyWords { get; set; }
+}
+
+public class RedisOptions
+{    
+    public string InstanceName { get; set; }
+    public string ConnectionString { get; set; }
+    public int TTL { get; set; }
 }

@@ -41,6 +41,8 @@ services:
       - Options__MaxDelayMileseconds=1800
       - Options__UrlClient=http://servico-core-b:5000
       - Options__OtelUrl=http://collector:4317
+      - Options__UseCache=true
+      - Options__Redis__ConnectionString=redis
     networks:
       - mservices
       - otel-collector
@@ -54,10 +56,18 @@ services:
       - Options__MaxDelayMileseconds=1200
       - Options__OtelUrl=http://collector:4317
       - Options__Seed__Records=10
-      - Options__Seed__MaxBodyWords=100
+      - Options__Seed__MaxBodyWords=20
     networks:
       - mservices
       - otel-collector
+
+  redis:
+    image: redis:7.0.5-alpine3.16
+    container_name: redis
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_REPLICATION_MODE=master
 
   collector:
     image: otel/opentelemetry-collector-contrib:0.23.0
@@ -67,8 +77,8 @@ services:
       - ./config.yaml:/etc/otel-collector-config.yml:ro
     ports:
       - "4317:4317"
-    depends_on:
-      - apm-server
+    # depends_on:
+    #   - apm-server
     networks:
       - otel-collector
       - apm

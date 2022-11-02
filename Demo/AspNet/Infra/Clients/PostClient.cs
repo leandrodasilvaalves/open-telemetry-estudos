@@ -2,7 +2,6 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
 
-
 internal interface IPostClient
 {
     Task<IEnumerable<Post>> GetAll();
