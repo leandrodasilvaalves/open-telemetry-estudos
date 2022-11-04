@@ -28,7 +28,7 @@ internal class CacheRepository : IPostRepository
     private async Task<Post> GetAsync(Guid postId)
     {
         var post = await _database.GetStringAsync(postId.ToString());
-        return JsonSerializer.Deserialize<Post>(post);
+        return post != null ? JsonSerializer.Deserialize<Post>(post) : default;
     }
 
     public IEnumerable<Post> GetAll() => _nextRepository.GetAll();

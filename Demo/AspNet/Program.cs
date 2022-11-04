@@ -24,7 +24,7 @@ builder.Services.AddOpenTelemetryTracing(providerBuilder =>
             .AddService(options.ServiceName, options.ServiceVersion))
         .AddHttpClientInstrumentation()
         .AddAspNetCoreInstrumentation()
-        .AddRedisInstrumentation()
+        // .AddRedisInstrumentation()
         .AddOtlpExporter(opt =>
         {
             opt.Endpoint = new Uri(options.OtelUrl);
