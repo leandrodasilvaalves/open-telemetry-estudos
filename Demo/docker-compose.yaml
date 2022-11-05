@@ -9,9 +9,10 @@ networks:
     driver: bridge
   apm:
     driver: bridge
+  infra:
+    driver: bridge
   others:
     driver: bridge
-    
 
 services:
   entrypoint:
@@ -26,11 +27,13 @@ services:
       - Options__ServiceName=Entrypoint
       - Options__Mode=CLIENT
       - Options__MaxDelayMileseconds=800
-      - Options__UrlClient=http://servico-core-a:5000
+      - Options__UrlClient=http://servico-core-a:5000/api
       - Options__OtelUrl=http://collector:4317
+      - Options__Rabbit__ConnectionString=rabbitmq://rabbit
     networks:
       - mservices
       - otel-collector
+      - infra
 
   servico-core-a:
     image: lele-sevico-exemplo:v1.0.0
@@ -39,13 +42,15 @@ services:
       - Options__ServiceName=Servico_A
       - Options__Mode=CLIENT
       - Options__MaxDelayMileseconds=1800
-      - Options__UrlClient=http://servico-core-b:5000
+      - Options__UrlClient=http://servico-core-b:5000/api
       - Options__OtelUrl=http://collector:4317
       - Options__UseCache=true
       - Options__Redis__ConnectionString=redis
+      - Options__Rabbit__ConnectionString=rabbitmq://rabbit
     networks:
       - mservices
       - otel-collector
+      - infra
 
   servico-core-b:
     image: lele-sevico-exemplo:v1.0.0
@@ -57,9 +62,11 @@ services:
       - Options__OtelUrl=http://collector:4317
       - Options__Seed__Records=10
       - Options__Seed__MaxBodyWords=20
+      - Options__Rabbit__ConnectionString=rabbitmq://rabbit
     networks:
       - mservices
       - otel-collector
+      - infra
 
   redis:
     image: redis:7.0.5-alpine3.16
@@ -68,6 +75,17 @@ services:
       - "6379:6379"
     environment:
       - REDIS_REPLICATION_MODE=master
+    networks:
+      - infra
+
+  rabbit:
+    image: rabbitmq:3.9-management
+    container_name: rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
+    networks:
+      - infra
 
   collector:
     image: otel/opentelemetry-collector-contrib:0.23.0
@@ -77,8 +95,8 @@ services:
       - ./config.yaml:/etc/otel-collector-config.yml:ro
     ports:
       - "4317:4317"
-    # depends_on:
-    #   - apm-server
+    depends_on:
+      - apm-server
     networks:
       - otel-collector
       - apm
@@ -91,18 +109,18 @@ services:
     depends_on:
       - elasticsearch
       - kibana
-    cap_add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
-    cap_drop: ["ALL"]
+    cap_add: [ "CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID" ]
+    cap_drop: [ "ALL" ]
     ports:
-    - 8200:8200
+      - 8200:8200
     command: >
-       apm-server -e
-         -E apm-server.rum.enabled=true
-         -E setup.kibana.host=kibana:5601
-         -E setup.template.settings.index.number_of_replicas=0
-         -E apm-server.kibana.enabled=true
-         -E apm-server.kibana.host=kibana:5601
-         -E output.elasticsearch.hosts=["elasticsearch:9200"]
+      apm-server -e
+        -E apm-server.rum.enabled=true
+        -E setup.kibana.host=kibana:5601
+        -E setup.template.settings.index.number_of_replicas=0
+        -E apm-server.kibana.enabled=true
+        -E apm-server.kibana.host=kibana:5601
+        -E output.elasticsearch.hosts=["elasticsearch:9200"]
     healthcheck:
       interval: 10s
       retries: 20
@@ -115,22 +133,22 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
     container_name: elasticsearch
     environment:
-    - node.name=es01
-    - bootstrap.memory_lock=true
-    - cluster.name=docker-cluster
-    - discovery.type=single-node
-    - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - node.name=es01
+      - bootstrap.memory_lock=true
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
     ulimits:
       memlock:
         hard: -1
         soft: -1
     ports:
-    - 9200:9200
+      - 9200:9200
     healthcheck:
       interval: 10s
       retries: 20
       test: curl -s http://localhost:9200/_cluster/health | grep -vq '"status":"red"'
-    networks:    
+    networks:
       - elk
 
   kibana:
@@ -142,12 +160,12 @@ services:
       ELASTICSEARCH_URL: http://elasticsearch:9200
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
     ports:
-    - 5601:5601
+      - 5601:5601
     healthcheck:
       interval: 10s
       retries: 20
       test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:5601/api/status
-    networks:    
+    networks:
       - elk
 
   jaeger:

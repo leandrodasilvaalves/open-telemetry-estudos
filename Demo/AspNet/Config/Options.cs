@@ -19,6 +19,7 @@ public class Options
     public SeedOptions Seed { get; set; }
     public bool UseCache { get; set; } = false;
     public RedisOptions Redis { get; set; }
+    public RabbitOptions Rabbit { get; set; }
 
     public override string ToString()
     {
@@ -36,8 +37,15 @@ public class SeedOptions
 }
 
 public class RedisOptions
-{    
+{
     public string InstanceName { get; set; }
     public string ConnectionString { get; set; }
     public int TTL { get; set; }
+}
+
+public class RabbitOptions
+{
+    public string ConnectionString { get; set; }
+    public string UserName { get; set; }
+    public string Password { get; set; }
 }

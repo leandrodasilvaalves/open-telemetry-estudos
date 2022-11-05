@@ -10,6 +10,7 @@ var options = builder.Services
 
 builder.Services
     .AddEndpointsApi()
+    .AddMassTransit(options.Rabbit)
     .AddRepositories(options)
     .AddClients()
     .AddServices()
@@ -22,9 +23,10 @@ builder.Services.AddOpenTelemetryTracing(providerBuilder =>
         .AddSource(options.ServiceName)
         .SetResourceBuilder(ResourceBuilder.CreateDefault()
             .AddService(options.ServiceName, options.ServiceVersion))
+        // .AddRedisInstrumentation()
+        .AddMassTransitInstrumentation()
         .AddHttpClientInstrumentation()
         .AddAspNetCoreInstrumentation()
-        // .AddRedisInstrumentation()
         .AddOtlpExporter(opt =>
         {
             opt.Endpoint = new Uri(options.OtelUrl);

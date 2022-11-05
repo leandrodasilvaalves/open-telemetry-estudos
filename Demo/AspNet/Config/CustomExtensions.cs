@@ -1,3 +1,5 @@
+using System.Reflection;
+using MassTransit;
 using Microsoft.OpenApi.Models;
 
 internal static class CustomExtensions
@@ -6,6 +8,30 @@ internal static class CustomExtensions
     {
         self.AddControllers();
         self.AddEndpointsApiExplorer();
+        return self;
+    }
+
+    internal static IServiceCollection AddMassTransit(this IServiceCollection self, RabbitOptions options)
+    {
+        self.AddMassTransit(config =>
+        {
+            config.AddConsumers(Assembly.GetEntryAssembly());
+            config.SetKebabCaseEndpointNameFormatter();
+            config.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
+            {
+                cfg.Host(new Uri(options.ConnectionString), h =>
+                {
+                    h.Username(options.UserName);
+                    h.Password(options.Password);
+                });
+                cfg.ReceiveEndpoint("post-was-consulted", ep =>
+                {
+                    ep.PrefetchCount = 1;
+                    ep.UseMessageRetry(r => r.Interval(2, 100));
+                    ep.ConfigureConsumer<PostWasConsultedConsumer>(provider);
+                });
+            }));
+        });
         return self;
     }
 
@@ -32,6 +58,8 @@ internal static class CustomExtensions
 
     internal static IServiceCollection AddRepositories(this IServiceCollection self, Options options)
     {
+        self.AddSingleton<IPostRepository, PostRepository>();
+
         if (options.UseCache)
         {
             self.AddDistributedRedisCache(opt =>
@@ -39,10 +67,9 @@ internal static class CustomExtensions
                 opt.Configuration = options.Redis.ConnectionString;
                 opt.InstanceName = options.Redis.InstanceName;
             });
+            self.Decorate<IPostRepository, CacheRepository>();
         }
 
-        self.AddSingleton<IPostRepository, PostRepository>();
-        self.Decorate<IPostRepository, CacheRepository>();
         self.AddAsyncInitializer<Seed>();
         return self;
     }
