@@ -10,13 +10,15 @@ namespace AspNet.Controllers
     {
         private readonly IPostService _service;
         private readonly ActivitySource _source;
+        private readonly ILogger<PostsController> _logger;    
         private Options _options;
 
-        public PostsController(IPostService postService, IOptionsMonitor<Options> options)
+        public PostsController(IPostService postService, IOptionsMonitor<Options> options, ILogger<PostsController> logger)
         {
             _service = postService;
             _options = options.CurrentValue;
             _source = new ActivitySource(_options.ServiceName);
+            _logger = logger;
         }
 
         [HttpGet]
@@ -25,10 +27,12 @@ namespace AspNet.Controllers
             var activity = _source.StartActivity("GET /posts");
             activity?.SetTag("before_request", "get all posts");
 
+            _logger.LogInformation("Starting process");
             var response = await _service.GetAll();
             await Task.Delay(new Random().Next(100, _options.MaxDelayMileseconds));
 
             activity?.SetTag("after_request", "get all posts");
+            _logger.LogInformation("Ending process");
             return Ok(response);
         }
 
