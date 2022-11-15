@@ -19,6 +19,10 @@ exporters:
     endpoint: apm-server:8200
     insecure: true
 
+  elasticsearch:
+    endpoint: elasticsearch:9200
+    insecure: true
+
   jaeger:
     endpoint: jaeger:14250
     insecure: true
