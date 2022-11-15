@@ -5,13 +5,13 @@ receivers:
       http:
 
 processors:
-  batch: 
+  batch:
     timeout: 10s
 
 exporters:
   logging:
     logLevel: debug
-  
+
   zipkin:
     endpoint: "http://zipkin:9411/api/v2/spans"
 
@@ -31,9 +31,15 @@ service:
 
   pipelines:
     traces:
-      receivers: [ otlp ]
-      processors: [ batch ]
-      exporters: [ logging, zipkin, otlp/elastic, jaeger ]
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging, zipkin, otlp/elastic, jaeger]
+
     metrics:
       receivers: [otlp]
       exporters: [logging, otlp/elastic]
+
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp/elastic]

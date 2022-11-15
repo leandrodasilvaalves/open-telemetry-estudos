@@ -188,10 +188,10 @@ services:
   #   networks:
   #     - others
 
-  # zipkin:
-  #   image: openzipkin/zipkin
-  #   container_name: zipkin
-  #   ports:
-  #     - 9412:9411
-  #   networks:
-  #     - others
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - 9412:9411
+    networks:
+      - others

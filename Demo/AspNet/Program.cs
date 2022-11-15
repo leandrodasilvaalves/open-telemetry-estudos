@@ -1,12 +1,15 @@
 using OpenTelemetry;
+using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-
 var builder = WebApplication.CreateBuilder(args);
 
 var options = builder.Services
     .AddOptions(builder.Configuration)
     .GetOptions(builder.Configuration);
+
+var resource = ResourceBuilder.CreateDefault()
+            .AddService(options.ServiceName, options.ServiceVersion);
 
 builder.Services
     .AddEndpointsApi()
@@ -16,13 +19,25 @@ builder.Services
     .AddServices()
     .AddSwagger(options);
 
+builder.Logging
+    .AddFilter<OpenTelemetryLoggerProvider>("*", LogLevel.Warning)
+    .AddOpenTelemetry(providerBuilder =>
+    {
+        providerBuilder.SetResourceBuilder(resource);
+        providerBuilder.AddConsoleExporter();
+        providerBuilder.AddOtlpExporter(opt =>
+        {
+            opt.Endpoint = new Uri(options.OtelUrl);
+            opt.ExportProcessorType = ExportProcessorType.Simple;
+        });
+    });
+
 builder.Services.AddOpenTelemetryTracing(providerBuilder =>
 {
     providerBuilder
         .AddConsoleExporter()
         .AddSource(options.ServiceName)
-        .SetResourceBuilder(ResourceBuilder.CreateDefault()
-            .AddService(options.ServiceName, options.ServiceVersion))
+        .SetResourceBuilder(resource)
         // .AddRedisInstrumentation()
         .AddMassTransitInstrumentation()
         .AddHttpClientInstrumentation()
