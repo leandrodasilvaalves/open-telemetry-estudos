@@ -34,36 +34,18 @@ O rastreamento distribuído é uma técnica de diagnóstico que ajuda os engenhe
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Ler:
  - [x] https://learn.microsoft.com/pt-br/dotnet/core/diagnostics/distributed-tracing
  - [ ] https://learn.microsoft.com/pt-br/azure/azure-monitor/app/distributed-tracing
  - [ ] https://learn.microsoft.com/pt-br/azure/azure-monitor/app/codeless-overview
  - [x] https://learn.microsoft.com/pt-br/dotnet/core/diagnostics/logging-tracing
  - [ ] https://learn.microsoft.com/pt-br/dotnet/core/diagnostics/metrics
+
+
  - [ ] https://www.mytechramblings.com/tags/opentelemetry/
+ - [x] https://www.mytechramblings.com/posts/getting-started-with-opentelemetry-and-dotnet-core/ 
  - [ ] https://www.mytechramblings.com/posts/getting-started-with-opentelemetry-metrics-and-dotnet-part-1/
  - [ ] https://www.mytechramblings.com/posts/getting-started-with-opentelemetry-metrics-and-dotnet-part-2/
+
+ - [ ] https://opentelemetry.io/docs/concepts/
+  
