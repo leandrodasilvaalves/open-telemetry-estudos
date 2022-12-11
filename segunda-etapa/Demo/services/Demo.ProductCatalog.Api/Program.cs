@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<MongoConfig>(builder.Configuration.GetSection("MongoConfig"));
 builder.Services.AddSingleton<IProductRepository, ProductRepository>();
 
+builder.Services.AddMassTransit(builder.Configuration);
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

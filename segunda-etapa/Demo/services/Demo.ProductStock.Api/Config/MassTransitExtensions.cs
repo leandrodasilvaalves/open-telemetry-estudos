@@ -1,4 +1,7 @@
+using Demo.SharedModel.Config;
+using Demo.SharedModel.Contracts.Events;
 using Demo.SharedModel.Events;
+using Demo.SharedModel.Models;
 using MassTransit;
 
 namespace Demo.ProductStock.Api.Config
@@ -22,13 +25,10 @@ namespace Demo.ProductStock.Api.Config
                             config.Hosts.ToList().ForEach(host => clusterConfig.Node(host)));
                    });
 
-                    configureBus.Message<EventBase>(x => { x.SetEntityName(EventsConstants.ENDPOINT_PRODUCT_STOCK); });
+                    configureBus.Message<IEventBase<Product>>(x => { x.SetEntityName(EventsConstants.ENDPOINT_PRODUCT_STOCK_EVENTS); });
                 }));
             });
             return services;
         }
-
-        public static RabbitMQConfig GetRabbitMQConfig(this IConfiguration configuration)
-           => configuration.GetSection("RabbitMQCluster").Get<RabbitMQConfig>();
     }
 }

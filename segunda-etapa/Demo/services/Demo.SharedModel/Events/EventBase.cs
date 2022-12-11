@@ -1,12 +1,14 @@
+using Demo.SharedModel.Contracts.Events;
+
 namespace Demo.SharedModel.Events
 {
-    public abstract class EventBase
+    public abstract class EventBase<T> : IEventBase<T> where T : class
     {
         public string Name { get; protected set; }
         public DateTime TimeStamp { get; }
-        public Object Data { get; }
+        public T Data { get; }
 
-        public EventBase(object data)
+        public EventBase(T data)
         {
             TimeStamp = DateTime.UtcNow;
             Data = data;

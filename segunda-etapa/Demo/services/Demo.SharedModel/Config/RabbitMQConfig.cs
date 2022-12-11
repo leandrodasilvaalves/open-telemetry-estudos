@@ -1,4 +1,4 @@
-namespace Demo.ProductStock.Api.Config
+namespace Demo.SharedModel.Config
 {
     public class RabbitMQConfig
     {

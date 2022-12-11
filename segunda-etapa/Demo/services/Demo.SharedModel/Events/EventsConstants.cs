@@ -9,6 +9,7 @@ namespace Demo.SharedModel.Events
 
 
         //endpoints names
-        public const string ENDPOINT_PRODUCT_STOCK = "demo.productstock.events";
+        public const string ENDPOINT_PRODUCT_STOCK_EVENTS = "demo.productstock.events";
+        public const string ENDPOINT_PRODUCT_CATALOG_RECEIVE_NOTIFICATIONS = "demo.productscatalog.stock_notifications";
     }
 }

@@ -1,4 +1,5 @@
 using Demo.ProductStock.Api.Infra.Repository;
+using Demo.SharedModel.Contracts.Events.Products;
 using Demo.SharedModel.Events.Products;
 using Demo.SharedModel.Models;
 using MassTransit;
@@ -37,7 +38,7 @@ namespace Demo.ProductStock.Api.Controllers
         public async Task<IActionResult> PostAsync([FromBody] Product product)
         {
             var data = await _repository.InsertAsync(product);
-            await _publishEndpoint.Publish<ProductWasIncludedEvent>(new(product));
+            await _publishEndpoint.Publish<IProductWasIncludedEvent>(new ProductWasIncludedEvent(product));
             return Ok(data);
         }
 
@@ -46,7 +47,7 @@ namespace Demo.ProductStock.Api.Controllers
         {
             //TODO: validar rota com objeto (id)
             var data = await _repository.UpdateAsync(product);
-            await _publishEndpoint.Publish<ProductWasUpdatedEvent>(new(product));
+            await _publishEndpoint.Publish<IProductWasUpdatedEvent>(new ProductWasUpdatedEvent(product));
             return Ok(data);
         }
 
@@ -55,7 +56,7 @@ namespace Demo.ProductStock.Api.Controllers
         {
             var product = await _repository.GetAsync(id);
             await _repository.DeleteAsync(product);
-            await _publishEndpoint.Publish<ProductWasExcludedEvent>(new(product));
+            await _publishEndpoint.Publish<IProductWasExcludedEvent>(new ProductWasExcludedEvent(product));
             return Ok();
         }
     }
