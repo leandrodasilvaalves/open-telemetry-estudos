@@ -37,15 +37,16 @@ namespace Demo.ProductStock.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> PutAsync([FromBody] Product product)
+        public async Task<IActionResult> PutAsync([FromRoute] Guid id, [FromBody] Product product)
         {
             var data = await _repository.UpdateAsync(product);
             return Ok(data);
         }
 
         [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> DeleteAsync([FromBody] Product product)
+        public async Task<IActionResult> DeleteAsync([FromRoute] Guid id)
         {
+            var product = await _repository.GetAsync(id);
             await _repository.DeleteAsync(product);
             return Ok();
         }
