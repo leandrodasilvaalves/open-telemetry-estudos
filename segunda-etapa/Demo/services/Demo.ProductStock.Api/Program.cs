@@ -1,3 +1,4 @@
+using Demo.ProductStock.Api.Config;
 using Demo.ProductStock.Api.Infra.Context;
 using Demo.ProductStock.Api.Infra.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ProductDbContext>(opt => 
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddMassTransit(builder.Configuration);
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 

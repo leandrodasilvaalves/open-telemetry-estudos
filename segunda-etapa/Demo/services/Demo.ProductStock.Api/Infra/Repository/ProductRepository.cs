@@ -1,5 +1,5 @@
 using Demo.ProductStock.Api.Infra.Context;
-using Demo.ProductStock.Api.Models;
+using Demo.SharedModel.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Demo.ProductStock.Api.Infra.Repository
