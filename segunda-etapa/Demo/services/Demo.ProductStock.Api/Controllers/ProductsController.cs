@@ -44,6 +44,7 @@ namespace Demo.ProductStock.Api.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> PutAsync([FromRoute] Guid id, [FromBody] Product product)
         {
+            //TODO: validar rota com objeto (id)
             var data = await _repository.UpdateAsync(product);
             await _publishEndpoint.Publish<ProductWasUpdatedEvent>(new(product));
             return Ok(data);
