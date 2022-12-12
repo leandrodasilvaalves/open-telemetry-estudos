@@ -9,11 +9,13 @@ namespace Demo.ProductCatalog.Api.Controllers
     public class ProductsController : ControllerBase
     {
 
-        private readonly IProductRepository _repository;        
+        private readonly IProductRepository _repository;
+        private readonly IHostEnvironment _environment;        
 
-        public ProductsController(IProductRepository repository)
+        public ProductsController(IProductRepository repository, IHostEnvironment environment)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));            
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _environment = environment ?? throw new ArgumentNullException(nameof(environment));            
         }
 
         [HttpGet]
@@ -33,6 +35,7 @@ namespace Demo.ProductCatalog.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] Product product)
         {
+            if (_environment.IsProduction()) return Unauthorized();
             await _repository.InsertAsync(product);            
             return Ok(product);
         }
@@ -40,15 +43,17 @@ namespace Demo.ProductCatalog.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAsync([FromRoute] string id, [FromBody] Product product)
         {
+            if (_environment.IsProduction()) return Unauthorized();
             //TODO: validar rota com objeto (id)
-            await _repository.UpdateAsync(product);            
+            await _repository.UpdateAsync(product);
             return Ok(product);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] string id)
         {
-            await _repository.DeleteAsync(id.ToString());            
+            if (_environment.IsProduction()) return Unauthorized();
+            await _repository.DeleteAsync(id.ToString());
             return Ok();
         }
     }
