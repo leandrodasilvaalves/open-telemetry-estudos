@@ -1,0 +1,1334 @@
+{
+	"info": {
+		"_postman_id": "39867127-54cc-4a7f-add7-e6df17d6ca25",
+		"name": "Main Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2180918"
+	},
+	"item": [
+		{
+			"name": "Products Stock",
+			"item": [
+				{
+					"name": "/api/Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{product_stock_url}}/api/Products",
+							"host": [
+								"{{product_stock_url}}"
+							],
+							"path": [
+								"api",
+								"Products"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Products",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "/api/Products",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function generateNumber(min, max) {",
+									"    let value = (Math.random() * (max - min + 1)) + min;",
+									"    return Number.parseFloat(value).toFixed(2);",
+									"}",
+									"",
+									"function generageMargin(){",
+									"    let value = 1 + (generateNumber(10.00, 60.99) / 100);",
+									"    return Number.parseFloat(value).toFixed(2);",
+									"}",
+									"",
+									"let costPrice = generateNumber(1.00, 999.99);",
+									"let margin = generageMargin();",
+									"salePrice = Number.parseFloat(costPrice * margin).toFixed(2);",
+									"",
+									"pm.collectionVariables.set('costPrice', costPrice);",
+									"pm.collectionVariables.set('salePrice', salePrice);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const product = pm.response.json();",
+									"console.log('product', product);",
+									"",
+									"pm.collectionVariables.set('product_id', product?.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{$randomProductName}}\",\n  \"salePrice\": {{salePrice}},\n  \"costPrice\": {{costPrice}},\n  \"quantityInStock\": {{$randomInt}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{product_stock_url}}/api/Products",
+							"host": [
+								"{{product_stock_url}}"
+							],
+							"path": [
+								"api",
+								"Products"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"urn:uuid:b0277830-a6d5-f06a-5141-3bd29d7d937a\",\n  \"name\": \"ullamco in\",\n  \"salePrice\": -32773002.097197384,\n  \"costPrice\": -49409271.796206065,\n  \"quantityInStock\": -88433495\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Products",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "/api/Products/:id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{product_stock_url}}/api/Products/{{product_id}}",
+							"host": [
+								"{{product_stock_url}}"
+							],
+							"path": [
+								"api",
+								"Products",
+								"{{product_id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Products/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Products",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1c6491d9-11c9-cb21-3ffb-9d9c66e2a2d8",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "/api/Products/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"{{product_id}}\",\n  \"name\":  \"{{$randomProductName}}\",\n  \"salePrice\": {{salePrice}},\n  \"costPrice\": {{costPrice}},\n  \"quantityInStock\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{product_stock_url}}/api/Products/{{product_id}}",
+							"host": [
+								"{{product_stock_url}}"
+							],
+							"path": [
+								"api",
+								"Products",
+								"{{product_id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"urn:uuid:b0277830-a6d5-f06a-5141-3bd29d7d937a\",\n  \"name\": \"ullamco in\",\n  \"salePrice\": -32773002.097197384,\n  \"costPrice\": -49409271.796206065,\n  \"quantityInStock\": -88433495\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Products/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Products",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "laboris commodo exercitation minim",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "/api/Products/:id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{product_stock_url}}/api/Products/{{product_id}}",
+							"host": [
+								"{{product_stock_url}}"
+							],
+							"path": [
+								"api",
+								"Products",
+								"{{product_id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Products/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Products",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "laboris commodo exercitation minim",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Products Catalog",
+			"item": [
+				{
+					"name": "Cart",
+					"item": [
+						{
+							"name": "/api/Cart/:id/item",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let url = pm.environment.get('product_catalog_url');",
+											"",
+											"let getRequest = {",
+											"  url: `${url}/api/Products`,",
+											"  method: 'GET',",
+											"  header: {",
+											"    'Content-Type': 'application/json',",
+											"    'X-Foo': 'bar'",
+											"  },",
+											"};",
+											"",
+											"function getRandomInt(max) {",
+											"  return Math.floor(Math.random() * max);",
+											"}",
+											"",
+											"pm.sendRequest(getRequest, (error, response) => {",
+											"    const data = response.json();",
+											"    const {length} = data;",
+											"    const product = data[getRandomInt(length)];",
+											"    console.log(product);    ",
+											"    const {id, name, salePrice } =  product;",
+											"    pm.collectionVariables.set('cart_product_quantity', getRandomInt(100));",
+											"    pm.collectionVariables.set('cart_product_id', id);",
+											"    pm.collectionVariables.set('cart_product_name', name);",
+											"    pm.collectionVariables.set('cart_product_price', salePrice);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"quantity\": {{cart_product_quantity}},\n  \"productId\": \"{{cart_product_id}}\",\n  \"productName\": \"{{cart_product_name}}\",\n  \"unitPrice\": {{cart_product_price}}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product_catalog_url}}/api/Cart/{{cart_id}}/item",
+									"host": [
+										"{{product_catalog_url}}"
+									],
+									"path": [
+										"api",
+										"Cart",
+										"{{cart_id}}",
+										"item"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"quantity\": 25760931,\n  \"productId\": \"dolor deserunt in Lorem\",\n  \"productName\": \"ipsum dolore adipisicing est anim\",\n  \"unitPrice\": -1087158.0924235284\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Cart/:id/item",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Cart",
+												":id",
+												"item"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "50d98f7c-3eb2-e839-9979-dfc4f9f67b17",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Cart/:id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product_catalog_url}}/api/Cart/{{cart_id}}",
+									"host": [
+										"{{product_catalog_url}}"
+									],
+									"path": [
+										"api",
+										"Cart",
+										"{{cart_id}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/Cart/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Cart",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "50d98f7c-3eb2-e839-9979-dfc4f9f67b17",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Cart/:id/item/:item/remove",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{product_catalog_url}}/api/Cart/{{cart_id}}/item/{{cart_product_id}}/remove",
+									"host": [
+										"{{product_catalog_url}}"
+									],
+									"path": [
+										"api",
+										"Cart",
+										"{{cart_id}}",
+										"item",
+										"{{cart_product_id}}",
+										"remove"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/Cart/:id/item/:item/remove",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Cart",
+												":id",
+												"item",
+												":item",
+												"remove"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "50d98f7c-3eb2-e839-9979-dfc4f9f67b17",
+													"description": "(Required) "
+												},
+												{
+													"key": "item",
+													"value": "cil",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Cart/:id/checkout",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"function generateNumber(min, max) {",
+											"    let value = (Math.random() * (max - min + 1)) + min;",
+											"    return Number.parseInt(value);",
+											"}",
+											"",
+											"let verificationCode = generateNumber(100,999);",
+											"pm.collectionVariables.set('credit_card_verification_code', verificationCode);",
+											"",
+											"let year = Number.parseInt(`${ new Date().getFullYear()}`.substr(2));",
+											"let expiration = `${generateNumber(1,12)}/${generateNumber((year + 1), (year + 10))}`;",
+											"pm.collectionVariables.set('credit_card_expiration', expiration);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"number\": \"{{$randomCreditCardMask}} {{$randomCreditCardMask}} {{$randomCreditCardMask}} {{$randomCreditCardMask}}\",\n  \"verificationCode\": \"{{credit_card_verification_code}}\",\n  \"expiration\": \"{{credit_card_expiration}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product_catalog_url}}/api/Cart/{{cart_id}}/checkout",
+									"host": [
+										"{{product_catalog_url}}"
+									],
+									"path": [
+										"api",
+										"Cart",
+										"{{cart_id}}",
+										"checkout"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"number\": \"veniam in aliquip est\",\n  \"verificationCode\": \"par\",\n  \"expiration\": \"elit ut\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Cart/:id/checkout",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Cart",
+												":id",
+												"checkout"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "50d98f7c-3eb2-e839-9979-dfc4f9f67b17",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Cart/:id/cancel",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{product_catalog_url}}/api/Cart/{{cart_id}}/cancel",
+									"host": [
+										"{{product_catalog_url}}"
+									],
+									"path": [
+										"api",
+										"Cart",
+										"{{cart_id}}",
+										"cancel"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/Cart/:id/cancel",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Cart",
+												":id",
+												"cancel"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "50d98f7c-3eb2-e839-9979-dfc4f9f67b17",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let {id} = pm.response.json();",
+											"pm.collectionVariables.set('cart_id', id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"{{$guid}}\",\n  \"customer\": {\n    \"name\": \"{{$randomFullName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"document\": \"{{$randomBitcoin}}\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product_catalog_url}}/api/Cart",
+									"host": [
+										"{{product_catalog_url}}"
+									],
+									"path": [
+										"api",
+										"Cart"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"id\": \"urn:uuid:c7bc546f-743c-4f19-5f7f-c4d1bfa46176\",\n  \"customer\": {\n    \"name\": \"in lab\",\n    \"email\": \"veniam nisi deserunt ad\",\n    \"document\": \"tempor aute ad proident do\",\n    \"creditCard\": {\n      \"number\": \"proident enim cupidatat\",\n      \"verificationCode\": \"nul\",\n      \"expiration\": \"non Duis occaecat anim\"\n    }\n  },\n  \"status\": 0\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Cart",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Cart"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Catalog",
+					"item": [
+						{
+							"name": "/api/Products",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product_catalog_url}}/api/Products",
+									"host": [
+										"{{product_catalog_url}}"
+									],
+									"path": [
+										"api",
+										"Products"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/Products",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Products"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Products",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"function generateNumber(min, max) {",
+											"    let value = (Math.random() * (max - min + 1)) + min;",
+											"    return Number.parseFloat(value).toFixed(2);",
+											"}",
+											"",
+											"function generageMargin(){",
+											"    let value = 1 + (generateNumber(10.00, 60.99) / 100);",
+											"    return Number.parseFloat(value).toFixed(2);",
+											"}",
+											"",
+											"let costPrice = generateNumber(1.00, 999.99);",
+											"let margin = generageMargin();",
+											"salePrice = Number.parseFloat(costPrice * margin).toFixed(2);",
+											"",
+											"pm.collectionVariables.set('costPrice', costPrice);",
+											"pm.collectionVariables.set('salePrice', salePrice);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const product = pm.response.json();",
+											"console.log('product', product);",
+											"",
+											"pm.collectionVariables.set('product_id', product?.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"{{$guid}}\",\n  \"name\": \"{{$randomProductName}}\",\n  \"salePrice\": {{salePrice}},\n  \"costPrice\": {{costPrice}},\n  \"quantityInStock\": {{$randomInt}}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product_catalog_url}}/api/Products",
+									"host": [
+										"{{product_catalog_url}}"
+									],
+									"path": [
+										"api",
+										"Products"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"id\": \"urn:uuid:b0277830-a6d5-f06a-5141-3bd29d7d937a\",\n  \"name\": \"ullamco in\",\n  \"salePrice\": -32773002.097197384,\n  \"costPrice\": -49409271.796206065,\n  \"quantityInStock\": -88433495\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Products",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Products"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Products/:id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product_catalog_url}}/api/Products/{{product_id}}",
+									"host": [
+										"{{product_catalog_url}}"
+									],
+									"path": [
+										"api",
+										"Products",
+										"{{product_id}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/Products/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Products",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1c6491d9-11c9-cb21-3ffb-9d9c66e2a2d8",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Products/:id",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"{{product_id}}\",\n  \"name\":  \"{{$randomProductName}}\",\n  \"salePrice\": {{salePrice}},\n  \"costPrice\": {{costPrice}},\n  \"quantityInStock\": 100\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product_catalog_url}}/api/Products/{{product_id}}",
+									"host": [
+										"{{product_catalog_url}}"
+									],
+									"path": [
+										"api",
+										"Products",
+										"{{product_id}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"id\": \"urn:uuid:b0277830-a6d5-f06a-5141-3bd29d7d937a\",\n  \"name\": \"ullamco in\",\n  \"salePrice\": -32773002.097197384,\n  \"costPrice\": -49409271.796206065,\n  \"quantityInStock\": -88433495\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Products/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Products",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "laboris commodo exercitation minim",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Products/:id",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product_catalog_url}}/api/Products/{{product_id}}",
+									"host": [
+										"{{product_catalog_url}}"
+									],
+									"path": [
+										"api",
+										"Products",
+										"{{product_id}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"id\": \"urn:uuid:b0277830-a6d5-f06a-5141-3bd29d7d937a\",\n  \"name\": \"ullamco in\",\n  \"salePrice\": -32773002.097197384,\n  \"costPrice\": -49409271.796206065,\n  \"quantityInStock\": -88433495\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Products/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Products",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "laboris commodo exercitation minim",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "costPrice",
+			"value": ""
+		},
+		{
+			"key": "salePrice",
+			"value": ""
+		},
+		{
+			"key": "product_id",
+			"value": ""
+		},
+		{
+			"key": "cart_id",
+			"value": ""
+		},
+		{
+			"key": "cart_product_quantity",
+			"value": ""
+		},
+		{
+			"key": "cart_product_id",
+			"value": ""
+		},
+		{
+			"key": "cart_product_name",
+			"value": ""
+		},
+		{
+			"key": "cart_product_price",
+			"value": ""
+		},
+		{
+			"key": "credit_card_verification_code",
+			"value": ""
+		},
+		{
+			"key": "credit_card_expiration",
+			"value": ""
+		}
+	]
+}

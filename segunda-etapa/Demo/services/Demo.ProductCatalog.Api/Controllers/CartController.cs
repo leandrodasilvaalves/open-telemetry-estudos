@@ -30,24 +30,24 @@ namespace Demo.ProductCatalog.Api.Controllers
             await _cacheRepository.InsertAsync(cart);
             return Ok(cart);
         }
-
-        [HttpPatch("{id:guid}/customer")]
-        public async Task<IActionResult> UpdateCustomerAsync(Guid id, [FromBody] Customer customer)
-        {
-            var cart = await _cacheRepository.GetAsync(id);
-            cart.Customer = customer;
-            await _cacheRepository.UpdateAsync(cart);
-            return Ok(cart);
-        }
-
+        
         [HttpPatch("{id:guid}/item")]
         public async Task<IActionResult> AddItemAsync(Guid id, [FromBody] CartItem item)
         {
             var cart = await _cacheRepository.GetAsync(id);
             var product = await _productRepository.GetAsync(item.ProductId);
 
-            if (product is null || cart is null)
+            if (product is null)
+            {
+                Console.WriteLine("Product not found");
                 return NotFound();
+            }
+
+            if (cart is null)
+            {
+                Console.WriteLine("Cart not found");
+                return NotFound();
+            }
 
             if (product.QuantityInStock == 0 || product.QuantityInStock < item.Quantity)
                 return BadRequest("Product not enough stock");
