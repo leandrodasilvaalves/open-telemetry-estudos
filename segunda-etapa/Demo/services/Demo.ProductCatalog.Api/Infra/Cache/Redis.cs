@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace Demo.ProductCatalog.Api.Infra.Cache
 {
-    public interface ICacheRepository<T> where T : class
+    public interface ICache<T> where T : class
     {
         Task<T> GetAsync(string id);
         Task RemoveAsync(string key);
@@ -13,12 +13,12 @@ namespace Demo.ProductCatalog.Api.Infra.Cache
         Task UpdateAsync(string key, T model);
     }
 
-    public class CacheRepository<T> : ICacheRepository<T> where T : class
+    public class Redis<T> : ICache<T> where T : class
     {
         private readonly IDistributedCache _database;
         private readonly RedisConfig _options;
 
-        public CacheRepository(IDistributedCache database, IOptions<RedisConfig> options)
+        public Redis(IDistributedCache database, IOptions<RedisConfig> options)
         {
             _database = database ?? throw new ArgumentNullException(nameof(database));
             _options = options.Value ?? throw new ArgumentException(nameof(options));

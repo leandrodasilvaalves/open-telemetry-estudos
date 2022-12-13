@@ -6,7 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOptions<MongoConfig>(builder.Configuration);
 builder.Services.AddSingleton<IProductRepository, ProductRepository>();
-builder.Services.AddSingleton(typeof(ICacheRepository<>), typeof(CacheRepository<>));
+builder.Services.AddSingleton(typeof(ICache<>), typeof(Redis<>));
+builder.Services.AddSingleton<ICartRepository, CartRepository>();
 
 builder.Services.AddMassTransit(builder.Configuration);
 builder.Services.AddRedids(builder.Configuration);
