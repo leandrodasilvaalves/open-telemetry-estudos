@@ -25,7 +25,6 @@ namespace Demo.ProductCatalog.Api.Config
                     {
                         rabbitMq.Username(config.Username);
                         rabbitMq.Password(config.Password);
-
                         rabbitMq.UseCluster(clusterConfig =>
                                 config.Hosts.ToList().ForEach(host => clusterConfig.Node(host)));
                     });
