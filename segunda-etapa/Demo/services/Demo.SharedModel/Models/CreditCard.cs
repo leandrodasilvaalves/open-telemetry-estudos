@@ -1,4 +1,4 @@
-namespace Demo.ProductCatalog.Api.Models
+namespace Demo.SharedModel.Models
 {
     public class CreditCard
     {

@@ -1,5 +1,8 @@
 using Demo.ProductCatalog.Api.Infra.Repository;
-using Demo.ProductCatalog.Api.Models;
+using Demo.SharedModel.Contracts.Events.Carts;
+using Demo.SharedModel.Events.Carts;
+using Demo.SharedModel.Models;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.ProductCatalog.Api.Controllers
@@ -12,10 +15,11 @@ namespace Demo.ProductCatalog.Api.Controllers
         private readonly IProductRepository _productRepository;
         private readonly IPublishEndpoint _publishEndpoint;
 
-        public CartController(ICartRepository cacheRepository, IProductRepository productRepository)
+        public CartController(ICartRepository cacheRepository, IProductRepository productRepository, IPublishEndpoint publishEndpoint)
         {
             _cacheRepository = cacheRepository ?? throw new ArgumentNullException(nameof(cacheRepository));
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+            _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
         }
 
         [HttpGet("{id:guid}")]
@@ -69,12 +73,13 @@ namespace Demo.ProductCatalog.Api.Controllers
         }
 
         [HttpPatch("{id:guid}/checkout")]
-        public async Task<IActionResult> PayAsync(Guid id, [FromBody] CreditCard creditCard)
+        public async Task<IActionResult> CheckoutAsync(Guid id, [FromBody] CreditCard creditCard)
         {
             var cart = await _cacheRepository.GetAsync(id);
             cart.Customer.CreditCard = creditCard;
             cart.WaitPayment();
             await _cacheRepository.UpdateAsync(cart);
+            await _publishEndpoint.Publish<ICartWasCheckouted>(new CartWasCheckouted(cart));
             return Accepted(cart);
         }
 

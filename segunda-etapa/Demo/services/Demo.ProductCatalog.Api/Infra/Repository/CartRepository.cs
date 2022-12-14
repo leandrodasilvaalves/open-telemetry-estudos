@@ -1,5 +1,5 @@
 using Demo.ProductCatalog.Api.Infra.Cache;
-using Demo.ProductCatalog.Api.Models;
+using Demo.SharedModel.Models;
 
 namespace Demo.ProductCatalog.Api.Infra.Repository
 {

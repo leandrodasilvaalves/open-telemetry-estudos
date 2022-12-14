@@ -1,6 +1,8 @@
 using Demo.ProductCatalog.Api.Consumers;
 using Demo.SharedModel.Config;
+using Demo.SharedModel.Contracts.Events;
 using Demo.SharedModel.Events;
+using Demo.SharedModel.Models;
 using MassTransit;
 
 namespace Demo.ProductCatalog.Api.Config
@@ -35,6 +37,7 @@ namespace Demo.ProductCatalog.Api.Config
                         endpoint.ConfigureConsumer<ProductWasExcludedConsumer>(provider);
                     });
 
+                    configureBus.Message<IEventBase<Cart>>(x => { x.SetEntityName(EventsConstants.ENDPOINT_PRODUCT_CATALOG_EVENTS); });
                 }));
             });
             return services;
