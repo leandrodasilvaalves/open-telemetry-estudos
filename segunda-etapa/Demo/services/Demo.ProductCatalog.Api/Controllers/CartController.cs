@@ -10,6 +10,7 @@ namespace Demo.ProductCatalog.Api.Controllers
     {
         private readonly ICartRepository _cacheRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IPublishEndpoint _publishEndpoint;
 
         public CartController(ICartRepository cacheRepository, IProductRepository productRepository)
         {
@@ -72,7 +73,7 @@ namespace Demo.ProductCatalog.Api.Controllers
         {
             var cart = await _cacheRepository.GetAsync(id);
             cart.Customer.CreditCard = creditCard;
-            cart.Close();
+            cart.WaitPayment();
             await _cacheRepository.UpdateAsync(cart);
             return Accepted(cart);
         }

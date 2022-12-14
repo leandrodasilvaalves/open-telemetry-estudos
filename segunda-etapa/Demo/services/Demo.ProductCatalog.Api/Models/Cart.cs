@@ -32,6 +32,7 @@ namespace Demo.ProductCatalog.Api.Models
         }
 
         public void Close() => Status = CartStatus.CLOSED;
+        public void WaitPayment() => Status = CartStatus.WAITING_PAYMENT;
     }
 
     public class CartItem
@@ -46,6 +47,7 @@ namespace Demo.ProductCatalog.Api.Models
     public enum CartStatus
     {
         OPEN,
+        WAITING_PAYMENT,
         CLOSED
     }
 }
