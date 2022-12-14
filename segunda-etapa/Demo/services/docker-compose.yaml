@@ -5,6 +5,56 @@ networks:
     driver: bridge
     
 services:
+  payment:
+    image: demo.eshopping.payment.api
+    container_name: demo.eshopping.payment.api
+    build:
+      context: .
+      dockerfile: Demo.Payment.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RabbitMQCluster__Cluster=rabbitmq://rabbitmq
+      - RabbitMQCluster__Hosts__0=rabbitmq
+    networks:
+      - demo
+    volumes:
+      - ~/.aspnet/https/:/https:ro
+
+  catalog:
+    image: demo.eshopping.catalog.api
+    container_name: demo.eshopping.catalog.api
+    build:
+      context: .
+      dockerfile: Demo.ProductCatalog.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development      
+      - RabbitMQCluster__Cluster=rabbitmq://rabbitmq
+      - RabbitMQCluster__Hosts__0=rabbitmq
+      - RedisConfig__ConnectionString=redis
+      - MongoConfig__ConnectionString=mongodb://root:123Mudar@mongodb:27017
+    ports:
+      - 7143:80
+    networks:
+      - demo
+    volumes:
+      - /usr/local/share/ca-certificates/aspnet/:/https:ro
+
+  stock:
+    image: demo.eshopping.stock.api
+    container_name: demo.eshopping.stock.api
+    build:
+      context: .
+      dockerfile: Demo.ProductStock.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RabbitMQCluster__Cluster=rabbitmq://rabbitmq
+      - RabbitMQCluster__Hosts__0=rabbitmq
+      - ConnectionStrings__DefaultConnection=server=sqlserver;user id=sa;password=123@Mudar;database=demo.productstock.api;
+    ports:
+      - 7235:80
+    networks:
+      - demo
+    
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -32,7 +82,9 @@ services:
       - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: 123Mudar
+      MONGO_INITDB_ROOT_PASSWORD: 123Mudar    
+    networks:
+      - demo
 
   redis:    
     image: redis
@@ -40,4 +92,6 @@ services:
     ports:
       - "6379:6379"
     environment:
-      - REDIS_REPLICATION_MODE=master
+      - REDIS_REPLICATION_MODE=master    
+    networks:
+      - demo
