@@ -6,50 +6,47 @@ networks:
     
 services:
   payment:
-    image: demo.eshopping.payment.api
-    container_name: demo.eshopping.payment.api
+    image: ${PROJECT_NAME}.payment.api
+    container_name: ${PROJECT_NAME}.payment.api
     build:
       context: .
       dockerfile: Demo.Payment.Api/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - RabbitMQCluster__Cluster=rabbitmq://rabbitmq
-      - RabbitMQCluster__Hosts__0=rabbitmq
+      - ASPNETCORE_ENVIRONMENT=${ASPNET_ENV}
+      - RabbitMQCluster__Cluster=${RABBITMQ_CLUSTER}
+      - RabbitMQCluster__Hosts__0=${RABBITMQ_HOSTS}
     networks:
       - demo
-    volumes:
-      - ~/.aspnet/https/:/https:ro
 
   catalog:
-    image: demo.eshopping.catalog.api
-    container_name: demo.eshopping.catalog.api
+    image: ${PROJECT_NAME}.catalog.api
+    container_name: ${PROJECT_NAME}.catalog.api
     build:
       context: .
       dockerfile: Demo.ProductCatalog.Api/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development      
-      - RabbitMQCluster__Cluster=rabbitmq://rabbitmq
-      - RabbitMQCluster__Hosts__0=rabbitmq
-      - RedisConfig__ConnectionString=redis
-      - MongoConfig__ConnectionString=mongodb://root:123Mudar@mongodb:27017
+      - ASPNETCORE_ENVIRONMENT=${ASPNET_ENV}
+      - RabbitMQCluster__Cluster=${RABBITMQ_CLUSTER}
+      - RabbitMQCluster__Hosts__0=${RABBITMQ_HOSTS}
+      - RedisConfig__ConnectionString=${REDIS_CONNECTION}
+      - MongoConfig__ConnectionString=${MONGO_CONNECTION}
     ports:
       - 7143:80
     networks:
       - demo
-    volumes:
-      - /usr/local/share/ca-certificates/aspnet/:/https:ro
 
   stock:
-    image: demo.eshopping.stock.api
-    container_name: demo.eshopping.stock.api
+    image: ${PROJECT_NAME}.stock.api
+    container_name: ${PROJECT_NAME}.stock.api
     build:
       context: .
       dockerfile: Demo.ProductStock.Api/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - RabbitMQCluster__Cluster=rabbitmq://rabbitmq
-      - RabbitMQCluster__Hosts__0=rabbitmq
-      - ConnectionStrings__DefaultConnection=server=sqlserver;user id=sa;password=123@Mudar;database=demo.productstock.api;
+      - ASPNETCORE_ENVIRONMENT=${ASPNET_ENV}
+      - RabbitMQCluster__Cluster=${RABBITMQ_CLUSTER}
+      - RabbitMQCluster__Hosts__0=${RABBITMQ_HOSTS}
+      - SQL_SERVER_SA_PASSWORD
+      - ConnectionStrings__DefaultConnection=${SQLSERVER_CONNECTION}
     ports:
       - 7235:80
     networks:
@@ -57,7 +54,7 @@ services:
     
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: rabbitmq
+    container_name: ${PROJECT_NAME}.rabbitmq
     ports:
       - 15672:15672
       - 5672:5672
@@ -66,10 +63,10 @@ services:
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2017-CU20-ubuntu-16.04
-    container_name: sqlserver
+    container_name: ${PROJECT_NAME}.sqlserver
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=123@Mudar
+      - SA_PASSWORD=${SQL_SERVER_SA_PASSWORD}
     ports:
       - 1433:1433
     networks:
@@ -77,18 +74,18 @@ services:
 
   mongodb:
     image: mongo:latest
-    container_name: mongodb
+    container_name: ${PROJECT_NAME}.mongodb
     ports:
       - 27017:27017
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: 123Mudar    
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONOG_PASSWORD}    
     networks:
       - demo
 
   redis:    
     image: redis
-    container_name: otel-redis
+    container_name: ${PROJECT_NAME}.redis
     ports:
       - "6379:6379"
     environment:
