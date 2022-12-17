@@ -6,7 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOptions<PaymentProviderOptions>(builder.Configuration);
 builder.Services.AddMassTransit(builder.Configuration);
-builder.Services.AddSingleton<IPaymentProvider, PaymentProvider>();
+builder.Services.AddSingleton<IPaymentProvider, ExternalPaymentProvider>();
+builder.Services.AddSingleton<IPaymentRepository, PaymentRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

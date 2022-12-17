@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "POST",
-        "route": "payments",
+        "route": "paymentssss",
         "condition": "<#= DateTime.Now.Second % 2 != 0 #>"
     },
     "response": {

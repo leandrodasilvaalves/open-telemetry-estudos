@@ -12,11 +12,11 @@ namespace Demo.Payments.Api.Infra
         Task<bool> PayAsync(Payment payment);
     }
 
-    public class PaymentProvider : IPaymentProvider
+    public class ExternalPaymentProvider : IPaymentProvider
     {
         private readonly PaymentProviderOptions _options;
 
-        public PaymentProvider(IOptions<PaymentProviderOptions> options)
+        public ExternalPaymentProvider(IOptions<PaymentProviderOptions> options)
         {
             if (options.Value is null) throw new ArgumentNullException(nameof(PaymentProviderOptions));
             _options = options.Value;

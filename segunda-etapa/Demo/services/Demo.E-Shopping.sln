@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.ProductStock.Api", "De
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.SharedModel", "Demo.SharedModel\Demo.SharedModel.csproj", "{24FF2B04-4A51-4123-9887-1B856D33E7BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Emails.Worker", "Demo.Emails.Worker\Demo.Emails.Worker.csproj", "{518AC071-2252-4C0D-B750-651E1ABE4DE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{24FF2B04-4A51-4123-9887-1B856D33E7BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24FF2B04-4A51-4123-9887-1B856D33E7BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24FF2B04-4A51-4123-9887-1B856D33E7BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{518AC071-2252-4C0D-B750-651E1ABE4DE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{518AC071-2252-4C0D-B750-651E1ABE4DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{518AC071-2252-4C0D-B750-651E1ABE4DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{518AC071-2252-4C0D-B750-651E1ABE4DE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

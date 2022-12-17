@@ -5,6 +5,19 @@ networks:
     driver: bridge
     
 services:
+  emails:
+    image: ${PROJECT_NAME}.emails.worker
+    container_name: ${PROJECT_NAME}.emails.worker
+    build:
+      context: .
+      dockerfile: Demo.Emails.Worker/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNET_ENV}
+      - RabbitMQCluster__Cluster=${RABBITMQ_CLUSTER}
+      - RabbitMQCluster__Hosts__0=${RABBITMQ_HOSTS}
+    networks:
+      - demo
+
   payment:
     image: ${PROJECT_NAME}.payment.api
     container_name: ${PROJECT_NAME}.payment.api
@@ -101,5 +114,7 @@ services:
       - 8321:5000
     volumes:
       - ../mocks/payment:/app/Mocks:ro
+    networks:
+      - demo
     
     

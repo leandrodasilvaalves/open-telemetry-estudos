@@ -19,6 +19,7 @@ namespace Demo.SharedModel.Events
         //endpoints names [notifications]
         public const string ENDPOINT_PRODUCT_CATALOG_RECEIVE_NOTIFICATIONS = "demo.productscatalog.stock_notifications";
         public const string ENDPOINT_PAYMENT_RECEIVE_NOTIFICATIONS = "demo.payment.catalog_notifications";
+        public const string ENDPOINT_EMAIL_RECEIVE_NOTIFICATIONS = "demo.emails.notifications";
 
     }
 }
