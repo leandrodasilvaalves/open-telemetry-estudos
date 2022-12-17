@@ -1,3 +1,5 @@
+using Demo.SharedModel.Config;
+
 namespace Demo.ProductCatalog.Api.Config
 {
     public static class RedisExtensions

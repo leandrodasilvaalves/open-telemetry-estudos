@@ -1,0 +1,16 @@
+{
+    "request": {
+        "method": "POST",
+        "route": "payments",
+        "condition": "<#= DateTime.Now.Second % 2 != 0 #>"
+    },
+    "response": {
+        "status": "BadRequest",
+        "body": {
+            "id": "<#= Guid.NewGuid() #>",
+            "date_created": "<#= DateTime.Now.ToString() #>",            
+            "date_last_updated": "<#= DateTime.Now.ToString() #>",            
+            "status": "REJECTED"            
+        }
+    }
+}

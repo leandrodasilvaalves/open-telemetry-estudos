@@ -1,9 +1,11 @@
-﻿using Demo.Payment.Api.Consumers;
+﻿using Demo.Payments.Api.Consumers;
 using Demo.SharedModel.Config;
+using Demo.SharedModel.Contracts.Events;
 using Demo.SharedModel.Events;
+using Demo.SharedModel.Models;
 using MassTransit;
 
-namespace Demo.Payment.Api.Config
+namespace Demo.Payments.Api.Config
 {
     public static class MassTransitExtensions
     {
@@ -29,6 +31,8 @@ namespace Demo.Payment.Api.Config
                     {
                         endpoint.ConfigureConsumer<CartWasCheckoutedConsumer>(provider);
                     });
+
+                    configureBus.Message<IEventBase<Payment>>(x => { x.SetEntityName(EventsConstants.ENDPOINT_PAYMENTS_EVENTS); });
                 }));
             });
             return services;

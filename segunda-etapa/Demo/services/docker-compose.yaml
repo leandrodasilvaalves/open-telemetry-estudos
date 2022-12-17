@@ -10,11 +10,12 @@ services:
     container_name: ${PROJECT_NAME}.payment.api
     build:
       context: .
-      dockerfile: Demo.Payment.Api/Dockerfile
+      dockerfile: Demo.Payments.Api/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNET_ENV}
       - RabbitMQCluster__Cluster=${RABBITMQ_CLUSTER}
       - RabbitMQCluster__Hosts__0=${RABBITMQ_HOSTS}
+      - PaymentProviderOptions__Url=${PAYMENT_PROVIDER_URL}
     networks:
       - demo
 
@@ -92,3 +93,13 @@ services:
       - REDIS_REPLICATION_MODE=master    
     networks:
       - demo
+
+  external-payment:
+    image: natenho/mockaco
+    container_name: ${PROJECT_NAME}.mock.external-payment
+    ports:
+      - 8321:5000
+    volumes:
+      - ../mocks/payment:/app/Mocks:ro
+    
+    

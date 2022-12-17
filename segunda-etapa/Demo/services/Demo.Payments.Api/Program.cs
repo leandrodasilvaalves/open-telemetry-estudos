@@ -1,8 +1,12 @@
-using Demo.Payment.Api.Config;
+using Demo.Payments.Api.Config;
+using Demo.Payments.Api.Infra;
+using Demo.SharedModel.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddOptions<PaymentProviderOptions>(builder.Configuration);
 builder.Services.AddMassTransit(builder.Configuration);
+builder.Services.AddSingleton<IPaymentProvider, PaymentProvider>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
