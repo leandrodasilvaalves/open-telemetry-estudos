@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Demo.ProductCatalog.Api.Infra.Repository;
 using Demo.ProductCatalog.Api.Models;
 using Demo.SharedModel.Contracts.Events.Products;
@@ -18,7 +17,6 @@ namespace Demo.ProductCatalog.Api.Consumers
         public async Task Consume(ConsumeContext<IProductWasUpdatedEvent> context)
         {
             var product = context.Message?.Data;
-            Console.WriteLine("Received Message: {0}", JsonSerializer.Serialize(product, new JsonSerializerOptions { WriteIndented = true }));
             await _repository.UpdateAsync((Product)product);
         }
     }

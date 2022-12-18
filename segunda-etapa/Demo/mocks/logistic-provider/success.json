@@ -9,7 +9,8 @@
             "id": "<#= Guid.NewGuid() #>",
             "date_created": "<#= DateTime.Now.ToString() #>",            
             "date_last_updated": "<#= DateTime.Now.ToString() #>",            
-            "message": "Order received successfully"            
+            "message": "Order received successfully",
+            "received": true            
         }
     }
 }

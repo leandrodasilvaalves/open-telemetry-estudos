@@ -73,6 +73,7 @@ services:
       - RabbitMQCluster__Hosts__0=${RABBITMQ_HOSTS}
       - SQL_SERVER_SA_PASSWORD
       - ConnectionStrings__DefaultConnection=${SQLSERVER_CONNECTION}
+      - LogisticProviderOptions__Url=${LOGISTIC_PROVIDER_URL}
     ports:
       - 7235:80
     networks:

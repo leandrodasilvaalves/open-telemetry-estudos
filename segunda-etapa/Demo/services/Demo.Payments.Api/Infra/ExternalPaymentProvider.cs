@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Demo.Payments.Api.Config;
 using Demo.Payments.Api.Models;
 using Demo.SharedModel.Models;
