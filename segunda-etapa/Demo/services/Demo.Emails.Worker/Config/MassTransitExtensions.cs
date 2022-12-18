@@ -13,6 +13,7 @@ namespace Demo.Emails.Worker.Config
             {
                 configure.AddConsumer<PaymentWasApprovedConsumer>();
                 configure.AddConsumer<PaymentWasRejectedConsumer>();
+                configure.AddConsumer<LogisticProviderWasNotifiedConsumer>();
 
                 configure.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(configureBus =>
                 {
@@ -30,6 +31,7 @@ namespace Demo.Emails.Worker.Config
                     {
                         endpoint.ConfigureConsumer<PaymentWasApprovedConsumer>(provider);
                         endpoint.ConfigureConsumer<PaymentWasRejectedConsumer>(provider);
+                        endpoint.ConfigureConsumer<LogisticProviderWasNotifiedConsumer>(provider);
                     });                    
                 }));
             });

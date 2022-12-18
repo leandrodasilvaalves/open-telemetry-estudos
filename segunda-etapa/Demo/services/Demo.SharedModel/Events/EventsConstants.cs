@@ -9,6 +9,7 @@ namespace Demo.SharedModel.Events
         public const string EVENT_CART_WAS_CHECKOUTED = "CART_WAS_CHECKOUTED";
         public const string EVENT_PAYMENT_WAS_APPROVED = "PAYMENT_WAS_APPROVED";
         public const string EVENT_PAYMENT_WAS_REJECTED = "PAYMENT_WAS_REJECTED";
+        public const string EVENT_LOGISTIC_PROVIDER_WAS_NOTIFIED = "LOGISTIC_PROVIDER_WAS_NOTIFIED";
 
 
         //endpoints names [events]

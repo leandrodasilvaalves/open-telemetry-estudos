@@ -416,7 +416,7 @@
 											"};",
 											"",
 											"function getRandomInt(max) {",
-											"  return Math.floor(Math.random() * max);",
+											"  return Math.floor(Math.random() * max) + 1;",
 											"}",
 											"",
 											"pm.sendRequest(getRequest, (error, response) => {",
@@ -810,6 +810,53 @@
 										],
 										"type": "text/javascript"
 									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Referencia: http://sooho.com.br/dicas-e-truques/javascript/gerar-cpf-fake-com-javascript/",
+											"",
+											"const getModulo = (dividendo, divisor) => {",
+											"   return Math.round(dividendo - (Math.floor(dividendo / divisor) * divisor));",
+											"}",
+											"",
+											"const getRandomNumberBetween = (min, max) => {",
+											"  return Math.floor(Math.random() * (max - min) + min);",
+											"}",
+											"",
+											"const getNumerosRandomicos = (total) => {",
+											"   let numbers = [];",
+											"   for (let i = 0; i < total; i++) {",
+											"      numbers[i] = getRandomNumberBetween(1, 9);",
+											"   }",
+											"   return numbers;",
+											"}",
+											"",
+											"const getDigitoVerificadorCpf = (numeros = []) => {",
+											"   let digito = 0;",
+											"   let arraySize = numeros.length + 1;",
+											"",
+											"   numeros.map((numero, index) => {",
+											"       digito += numero * (arraySize - index);",
+											"   });",
+											"",
+											"   digito = 11 - (getModulo(digito, 11));",
+											"   return digito >= 10 ? 0 : digito;",
+											"}",
+											"",
+											"const gerarCpfFake = () => {",
+											"   let numeros = getNumerosRandomicos(9);",
+											"   numeros.push(getDigitoVerificadorCpf(numeros));",
+											"   numeros.push(getDigitoVerificadorCpf(numeros));",
+											"",
+											"   return numeros.join('');",
+											"}",
+											"",
+											"pm.collectionVariables.set('fakeDocument', gerarCpfFake());"
+										],
+										"type": "text/javascript"
+									}
 								}
 							],
 							"request": {
@@ -822,7 +869,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"id\": \"{{$guid}}\",\n  \"customer\": {\n    \"name\": \"{{$randomFullName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"document\": \"{{$randomBitcoin}}\"\n  }\n}",
+									"raw": "{\n  \"id\": \"{{$guid}}\",\n  \"customer\": {\n    \"name\": \"{{$randomFullName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"document\": \"{{fakeDocument}}\"\n  }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1329,6 +1376,10 @@
 		},
 		{
 			"key": "credit_card_expiration",
+			"value": ""
+		},
+		{
+			"key": "fakeDocument",
 			"value": ""
 		}
 	]

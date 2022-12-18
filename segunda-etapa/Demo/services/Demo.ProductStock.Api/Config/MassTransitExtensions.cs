@@ -41,6 +41,7 @@ namespace Demo.ProductStock.Api.Config
                     });
 
                     configureBus.Message<IEventBase<Product>>(x => { x.SetEntityName(EventsConstants.ENDPOINT_PRODUCT_STOCK_EVENTS); });                    
+                    configureBus.Message<IEventBase<LogisticNotification>>(x => { x.SetEntityName(EventsConstants.ENDPOINT_PRODUCT_STOCK_EVENTS); });                    
                 }));
             });
             return services;

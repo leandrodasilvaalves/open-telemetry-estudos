@@ -1,5 +1,6 @@
 using Demo.ProductStock.Api.Config;
 using Demo.ProductStock.Api.Models;
+using Demo.SharedModel.Models;
 using Flurl.Http;
 using Microsoft.Extensions.Options;
 
@@ -7,7 +8,7 @@ namespace Demo.ProductStock.Api.Infra.Providers
 {
     public interface IExternalLogisticProvider
     {
-        Task<bool> NotifyAsync(LogisticNotification notification);
+        Task NotifyAsync(LogisticNotification notification);
     }
 
     public class ExternalLogisticProvider : IExternalLogisticProvider
@@ -20,14 +21,12 @@ namespace Demo.ProductStock.Api.Infra.Providers
             _options = options.Value;
         }
 
-        public async Task<bool> NotifyAsync(LogisticNotification notification)
+        public async Task NotifyAsync(LogisticNotification notification)
         {
-            var result = await $"{_options.Url}/order"
+            await $"{_options.Url}/order"
                 .AllowAnyHttpStatus()
                 .PostJsonAsync(notification)
                 .ReceiveJson<LogisticProviderModel>();
-            
-            return result.Received;
         }
     }
 }

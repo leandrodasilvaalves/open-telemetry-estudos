@@ -1,7 +1,9 @@
 using Demo.ProductStock.Api.Contracts.Commands;
 using Demo.ProductStock.Api.Infra.Providers;
-using Demo.ProductStock.Api.Models;
+using Demo.SharedModel.Contracts.Events.LogisticProvider;
 using Demo.SharedModel.Contracts.Events.Payments;
+using Demo.SharedModel.Events.LogisticProvider;
+using Demo.SharedModel.Models;
 using MassTransit;
 
 namespace Demo.ProductStock.Api.Consumers
@@ -18,11 +20,9 @@ namespace Demo.ProductStock.Api.Consumers
         public async Task Consume(ConsumeContext<IPaymentWasApprovedEvent> context)
         {
             var payment = context.Message?.Data;
-            await _externalLogisticProvider.NotifyAsync(new LogisticNotification
-            {
-                Customer = payment.Customer,
-                Itens = payment.Items,
-            });
+            var notification = new LogisticNotification(payment.Customer, payment.Items);
+            await _externalLogisticProvider.NotifyAsync(notification);
+            await context.Publish<ILogisticProviderWasNotifiedEvent>(new LogisticProviderWasNotifiedEvent(notification));
 
             foreach (var product in payment?.Items)
             {
