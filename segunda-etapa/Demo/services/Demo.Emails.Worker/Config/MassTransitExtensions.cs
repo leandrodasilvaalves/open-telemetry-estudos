@@ -13,6 +13,7 @@ namespace Demo.Emails.Worker.Config
             services.AddMassTransit(configure =>
             {
                 configure.AddConsumer<PaymentWasApprovedConsumer>();
+                configure.AddConsumer<PaymentWasRejectedConsumer>();
 
                 configure.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(configureBus =>
                 {
@@ -29,6 +30,7 @@ namespace Demo.Emails.Worker.Config
                     configureBus.ReceiveEndpoint(EventsConstants.ENDPOINT_EMAIL_RECEIVE_NOTIFICATIONS, endpoint =>
                     {
                         endpoint.ConfigureConsumer<PaymentWasApprovedConsumer>(provider);
+                        endpoint.ConfigureConsumer<PaymentWasRejectedConsumer>(provider);
                     });                    
                 }));
             });

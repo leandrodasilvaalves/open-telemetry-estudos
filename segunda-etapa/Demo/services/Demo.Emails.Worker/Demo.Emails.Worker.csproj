@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-Demo.Emails.Worker-8e1e329a-6129-45a7-9180-224248156131</UserSecretsId>
   </PropertyGroup>

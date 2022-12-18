@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "POST",
-        "route": "payments"
+        "route": "paymentssss"
     },
     "response": {
         "status": "OK",

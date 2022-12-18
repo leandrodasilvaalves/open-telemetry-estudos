@@ -15,6 +15,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNET_ENV}
       - RabbitMQCluster__Cluster=${RABBITMQ_CLUSTER}
       - RabbitMQCluster__Hosts__0=${RABBITMQ_HOSTS}
+      - EmailOptions__Smtp=${EMAIL_SMTP}
+      - EmailOptions__Port=${EMAIL_PORT}
+      - EmailOptions__UserName=${EMAIL_USERNAME}
+      - EmailOptions__Password=${EMAIL_PASSWORD}
+      - EmailOptions__EmaiFrom=${EMAIL_FROM}
+      - EmailOptions__EnableSsl=${EMAIL_USE_SSL}
     networks:
       - demo
 
