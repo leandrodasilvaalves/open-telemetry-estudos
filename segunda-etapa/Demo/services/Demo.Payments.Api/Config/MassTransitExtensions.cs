@@ -27,7 +27,7 @@ namespace Demo.Payments.Api.Config
                             config.Hosts.ToList().ForEach(host => clusterConfig.Node(host)));
                     });
 
-                    configureBus.ReceiveEndpoint(EventsConstants.ENDPOINT_PAYMENT_RECEIVE_NOTIFICATIONS, endpoint =>
+                    configureBus.ReceiveEndpoint(EventsConstants.ENDPOINT_PAYMENT_RECEIVED_NOTIFICATIONS, endpoint =>
                     {
                         endpoint.ConfigureConsumer<CartWasCheckoutedConsumer>(provider);
                     });

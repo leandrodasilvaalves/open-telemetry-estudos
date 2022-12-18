@@ -398,7 +398,7 @@
 					"name": "Cart",
 					"item": [
 						{
-							"name": "/api/Cart/:id/item",
+							"name": "/api/Cart/:id/item/add",
 							"event": [
 								{
 									"listen": "prerequest",
@@ -453,7 +453,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{product_catalog_url}}/api/Cart/{{cart_id}}/item",
+									"raw": "{{product_catalog_url}}/api/Cart/{{cart_id}}/item/add",
 									"host": [
 										"{{product_catalog_url}}"
 									],
@@ -461,7 +461,8 @@
 										"api",
 										"Cart",
 										"{{cart_id}}",
-										"item"
+										"item",
+										"add"
 									]
 								}
 							},

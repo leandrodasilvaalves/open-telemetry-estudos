@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "POST",
-        "route": "payments"
+        "route": "order"
     },
     "response": {
         "status": "OK",
@@ -9,7 +9,7 @@
             "id": "<#= Guid.NewGuid() #>",
             "date_created": "<#= DateTime.Now.ToString() #>",            
             "date_last_updated": "<#= DateTime.Now.ToString() #>",            
-            "status": "APPROVED"            
+            "message": "Order received successfully"            
         }
     }
 }

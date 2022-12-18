@@ -1,18 +1,23 @@
+using System.Text.Json.Serialization;
+
 namespace Demo.SharedModel.Models
 {
     public class Payment
     {
-        public Payment(Customer customer, float amount, Guid cartId)
+        [JsonConstructor]
+        public Payment(){}
+        
+        public Payment(Customer customer, float amount, Cart cart)
         {
             Customer = customer;
             Amount = amount;
-            CartId = cartId;
+            Items = cart.Items;            
             Id = Guid.NewGuid();
         }
 
         public Guid Id { get; set; }
         public Customer Customer { get; set; }
-        public float Amount { get; set; }
-        public Guid CartId { get; set; }
+        public float Amount { get; set; }        
+        public List<CartItem> Items {get; set;}
     }
 }

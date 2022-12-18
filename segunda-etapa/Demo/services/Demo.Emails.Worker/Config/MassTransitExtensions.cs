@@ -3,7 +3,6 @@ using Demo.SharedModel.Config;
 using Demo.SharedModel.Events;
 using MassTransit;
 
-
 namespace Demo.Emails.Worker.Config
 {
     public static class MassTransitExtensions
@@ -27,7 +26,7 @@ namespace Demo.Emails.Worker.Config
                             config.Hosts.ToList().ForEach(host => clusterConfig.Node(host)));
                     });
 
-                    configureBus.ReceiveEndpoint(EventsConstants.ENDPOINT_EMAIL_RECEIVE_NOTIFICATIONS, endpoint =>
+                    configureBus.ReceiveEndpoint(EventsConstants.ENDPOINT_EMAIL_RECEIVED_NOTIFICATIONS, endpoint =>
                     {
                         endpoint.ConfigureConsumer<PaymentWasApprovedConsumer>(provider);
                         endpoint.ConfigureConsumer<PaymentWasRejectedConsumer>(provider);

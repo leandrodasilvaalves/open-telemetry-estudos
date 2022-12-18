@@ -29,7 +29,7 @@ namespace Demo.ProductCatalog.Api.Config
                                 config.Hosts.ToList().ForEach(host => clusterConfig.Node(host)));
                     });
 
-                    configureBus.ReceiveEndpoint(EventsConstants.ENDPOINT_PRODUCT_CATALOG_RECEIVE_NOTIFICATIONS, endpoint =>
+                    configureBus.ReceiveEndpoint(EventsConstants.ENDPOINT_PRODUCT_CATALOG_RECEIVED_NOTIFICATIONS, endpoint =>
                     {
                         endpoint.ConfigureConsumer<ProductWasIncludedConsumer>(provider);
                         endpoint.ConfigureConsumer<ProductWasUpdatedConsumer>(provider);

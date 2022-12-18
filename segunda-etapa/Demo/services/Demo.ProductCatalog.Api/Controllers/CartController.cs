@@ -36,7 +36,7 @@ namespace Demo.ProductCatalog.Api.Controllers
             return Ok(cart);
         }
         
-        [HttpPatch("{id:guid}/item")]
+        [HttpPatch("{id:guid}/item/add")]
         public async Task<IActionResult> AddItemAsync(Guid id, [FromBody] CartItem item)
         {
             var cart = await _cacheRepository.GetAsync(id);

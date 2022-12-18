@@ -21,7 +21,7 @@ namespace Demo.Payments.Api.Consumers
         public async Task Consume(ConsumeContext<ICartWasCheckouted> context)
         {
             var cart = context.Message?.Data;            
-            var payment = new Payment(cart.Customer, cart.Total, cart.Id);
+            var payment = new Payment(cart.Customer, cart.Total, cart);
 
             var isSuccess = await _paymentProviver.PayAsync(payment);            
             if (isSuccess)

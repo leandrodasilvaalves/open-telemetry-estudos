@@ -38,9 +38,7 @@ namespace Demo.ProductStock.Api.Infra.Repository
 
         public async Task<Product> GetAsync(Guid id)
         {
-            return await _db.Products
-                .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.Id == id);
+            return await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<Product> InsertAsync(Product product)

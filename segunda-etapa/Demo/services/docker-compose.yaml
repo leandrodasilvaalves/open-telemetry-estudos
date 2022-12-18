@@ -23,6 +23,8 @@ services:
       - EmailOptions__EnableSsl=${EMAIL_USE_SSL}
     networks:
       - demo
+    depends_on:
+      - rabbitmq
 
   payment:
     image: ${PROJECT_NAME}.payment.api
@@ -37,6 +39,8 @@ services:
       - PaymentProviderOptions__Url=${PAYMENT_PROVIDER_URL}
     networks:
       - demo
+    depends_on:
+      - rabbitmq
 
   catalog:
     image: ${PROJECT_NAME}.catalog.api
@@ -54,6 +58,8 @@ services:
       - 7143:80
     networks:
       - demo
+    depends_on:
+      - rabbitmq
 
   stock:
     image: ${PROJECT_NAME}.stock.api
@@ -71,6 +77,8 @@ services:
       - 7235:80
     networks:
       - demo
+    depends_on:
+      - rabbitmq
     
   rabbitmq:
     image: rabbitmq:3-management
@@ -113,14 +121,12 @@ services:
     networks:
       - demo
 
-  external-payment:
+  external-providers-mock:
     image: natenho/mockaco
     container_name: ${PROJECT_NAME}.mock.external-payment
     ports:
       - 8321:5000
     volumes:
-      - ../mocks/payment:/app/Mocks:ro
+      - ../mocks:/app/Mocks:ro
     networks:
       - demo
-    
-    

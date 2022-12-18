@@ -12,14 +12,17 @@ namespace Demo.SharedModel.Events
 
 
         //endpoints names [events]
-        public const string ENDPOINT_PRODUCT_STOCK_EVENTS = "demo.productstock.events";
+        public const string ENDPOINT_PRODUCT_STOCK_EVENTS = "demo.productstock.events";        
+        public const string ENDPOINT_PRODUCT_STOCK_RECEIVED_NOTIFICATIONS = "demo.productstock.received_notifications";
+        public const string ENDPOINT_PRODUCT_STOCK_RECEIVED_COMMANDS = "demo.productstock.received_commands";
+
         public const string ENDPOINT_PRODUCT_CATALOG_EVENTS = "demo.productscatalog.events";
         public const string ENDPOINT_PAYMENTS_EVENTS = "demo.payments.events";
+        
 
         //endpoints names [notifications]
-        public const string ENDPOINT_PRODUCT_CATALOG_RECEIVE_NOTIFICATIONS = "demo.productscatalog.stock_notifications";
-        public const string ENDPOINT_PAYMENT_RECEIVE_NOTIFICATIONS = "demo.payment.catalog_notifications";
-        public const string ENDPOINT_EMAIL_RECEIVE_NOTIFICATIONS = "demo.emails.notifications";
-
+        public const string ENDPOINT_PRODUCT_CATALOG_RECEIVED_NOTIFICATIONS = "demo.productscatalog.received_notifications";
+        public const string ENDPOINT_PAYMENT_RECEIVED_NOTIFICATIONS = "demo.payment.received_notifications";
+        public const string ENDPOINT_EMAIL_RECEIVED_NOTIFICATIONS = "demo.emails.received_notifications";
     }
 }

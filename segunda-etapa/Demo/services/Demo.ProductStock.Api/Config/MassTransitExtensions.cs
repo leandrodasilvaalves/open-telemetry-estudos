@@ -1,3 +1,5 @@
+using Demo.ProductStock.Api.Consumers;
+using Demo.ProductStock.Api.Contracts.Commands;
 using Demo.SharedModel.Config;
 using Demo.SharedModel.Contracts.Events;
 using Demo.SharedModel.Events;
@@ -12,6 +14,9 @@ namespace Demo.ProductStock.Api.Config
         {
             services.AddMassTransit(configure =>
             {
+                configure.AddConsumer<PaymentWasApprovedConsumer>();
+                configure.AddConsumer<UpdateProductCommandConsumer>();
+
                 configure.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(configureBus =>
                 {
                     var config = configuration.GetRabbitMQConfig();
@@ -25,7 +30,17 @@ namespace Demo.ProductStock.Api.Config
                             config.Hosts.ToList().ForEach(host => clusterConfig.Node(host)));
                    });
 
-                    configureBus.Message<IEventBase<Product>>(x => { x.SetEntityName(EventsConstants.ENDPOINT_PRODUCT_STOCK_EVENTS); });
+                    configureBus.ReceiveEndpoint(EventsConstants.ENDPOINT_PRODUCT_STOCK_RECEIVED_NOTIFICATIONS, endpoint =>
+                    {
+                        endpoint.ConfigureConsumer<PaymentWasApprovedConsumer>(provider);
+                    });
+
+                    configureBus.ReceiveEndpoint(EventsConstants.ENDPOINT_PRODUCT_STOCK_RECEIVED_COMMANDS, endpoint =>
+                    {
+                        endpoint.Consumer<UpdateProductCommandConsumer>(provider);
+                    });
+
+                    configureBus.Message<IEventBase<Product>>(x => { x.SetEntityName(EventsConstants.ENDPOINT_PRODUCT_STOCK_EVENTS); });                    
                 }));
             });
             return services;
