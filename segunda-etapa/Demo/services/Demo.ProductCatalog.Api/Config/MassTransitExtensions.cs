@@ -16,6 +16,7 @@ namespace Demo.ProductCatalog.Api.Config
                 configure.AddConsumer<ProductWasIncludedConsumer>();
                 configure.AddConsumer<ProductWasUpdatedConsumer>();
                 configure.AddConsumer<ProductWasExcludedConsumer>();
+                configure.AddConsumer<PaymentWasApprovedConsumer>();
 
                 configure.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(configureBus =>
                 {
@@ -34,6 +35,7 @@ namespace Demo.ProductCatalog.Api.Config
                         endpoint.ConfigureConsumer<ProductWasIncludedConsumer>(provider);
                         endpoint.ConfigureConsumer<ProductWasUpdatedConsumer>(provider);
                         endpoint.ConfigureConsumer<ProductWasExcludedConsumer>(provider);
+                        endpoint.ConfigureConsumer<PaymentWasApprovedConsumer>(provider);
                     });
 
                     configureBus.Message<IEventBase<Cart>>(x => { x.SetEntityName(EventsConstants.ENDPOINT_PRODUCT_CATALOG_EVENTS); });

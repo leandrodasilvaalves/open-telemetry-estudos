@@ -13,9 +13,11 @@ namespace Demo.SharedModel.Models
             Amount = amount;
             Items = cart.Items;            
             Id = Guid.NewGuid();
-        }
+            CartId = cart.Id;
+        }   
 
         public Guid Id { get; set; }
+        public Guid CartId { get; set; }
         public Customer Customer { get; set; }
         public float Amount { get; set; }        
         public List<CartItem> Items {get; set;}

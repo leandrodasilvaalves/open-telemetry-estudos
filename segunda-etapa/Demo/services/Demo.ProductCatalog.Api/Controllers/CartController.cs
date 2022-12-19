@@ -1,3 +1,4 @@
+using Demo.ProductCatalog.Api.Infra.Cache;
 using Demo.ProductCatalog.Api.Infra.Repository;
 using Demo.SharedModel.Contracts.Events.Carts;
 using Demo.SharedModel.Events.Carts;
@@ -11,11 +12,11 @@ namespace Demo.ProductCatalog.Api.Controllers
     [Route("api/[controller]")]
     public class CartController : ControllerBase
     {
-        private readonly ICartRepository _cacheRepository;
+        private readonly ICartCacheRepository _cacheRepository;
         private readonly IProductRepository _productRepository;
         private readonly IPublishEndpoint _publishEndpoint;
 
-        public CartController(ICartRepository cacheRepository, IProductRepository productRepository, IPublishEndpoint publishEndpoint)
+        public CartController(ICartCacheRepository cacheRepository, IProductRepository productRepository, IPublishEndpoint publishEndpoint)
         {
             _cacheRepository = cacheRepository ?? throw new ArgumentNullException(nameof(cacheRepository));
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));

@@ -1,6 +1,7 @@
 using Demo.ProductCatalog.Api.Config;
 using Demo.ProductCatalog.Api.Models;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 
 namespace Demo.ProductCatalog.Api.Infra.Repository
@@ -22,6 +23,9 @@ namespace Demo.ProductCatalog.Api.Infra.Repository
 
         public RepositoryBase(IOptions<MongoConfig> options)
         {
+            var conventionPack = new  ConventionPack {new CamelCaseElementNameConvention()};
+            ConventionRegistry.Register("camelCase", conventionPack, t => true);
+
             var mongoClient = new MongoClient(options.Value.ConnectionString);
             var mongoDatabase = mongoClient.GetDatabase(options.Value.DatabaseName);
             Collection = mongoDatabase.GetCollection<T>(CollectionName);
