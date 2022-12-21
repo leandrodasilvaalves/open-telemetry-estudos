@@ -37,6 +37,9 @@ services:
       - RabbitMQCluster__Cluster=${RABBITMQ_CLUSTER}
       - RabbitMQCluster__Hosts__0=${RABBITMQ_HOSTS}
       - PaymentProviderOptions__Url=${PAYMENT_PROVIDER_URL}
+      - AWS__AccessKey=${AWS_ACCESS_KEY_ID}
+      - AWS__SecretKey=${AWS_SECRET_ACCESS_KEY}
+      - AWS__ServiceURL=${AWS_SERVICE_URL}
     networks:
       - demo
     depends_on:
@@ -119,6 +122,31 @@ services:
       - "6379:6379"
     environment:
       - REDIS_REPLICATION_MODE=master    
+    networks:
+      - demo
+
+  dynamodb:
+    image: amazon/dynamodb-local
+    container_name: ${PROJECT_NAME}.dynamodb
+    ports:
+      - "8000:8000"
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+    networks:
+      - demo
+
+  dynamodb-admin:
+    depends_on: 
+      - dynamodb
+    image: leandroalves86/dynamodb-admin:1.0.0
+    container_name: ${PROJECT_NAME}.dynamodb-admin
+    ports:
+      - 8001:8001
+    environment:
+      DYNAMO_ENDPOINT: http://dynamodb:8000
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
     networks:
       - demo
 

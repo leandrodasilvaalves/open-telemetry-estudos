@@ -1,4 +1,5 @@
 ﻿using Demo.Payments.Api.Infra;
+using Demo.Payments.Api.Infra.DbContext.Repositories;
 using Demo.SharedModel.Contracts.Events.Carts;
 using Demo.SharedModel.Contracts.Events.Payments;
 using Demo.SharedModel.Events.Payments;
@@ -26,7 +27,7 @@ namespace Demo.Payments.Api.Consumers
             var isSuccess = await _paymentProviver.PayAsync(payment);            
             if (isSuccess)
             {
-                // await _paymentRepository.SaveAsync(payment);
+                await _paymentRepository.SaveAsync(payment);
                 await context.Publish<IPaymentWasApprovedEvent>(new PaymentWasApprovedEvent(payment));
             }
             else

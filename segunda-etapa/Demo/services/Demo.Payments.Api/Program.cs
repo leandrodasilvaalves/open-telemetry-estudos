@@ -1,13 +1,23 @@
+using Amazon.DynamoDBv2;
 using Demo.Payments.Api.Config;
-using Demo.Payments.Api.Infra;
+using Demo.Payments.Api.Infra.DbContext.DynamoDb.Tables;
+using Demo.Payments.Api.Infra.Extensions;
 using Demo.SharedModel.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddOptions<PaymentProviderOptions>(builder.Configuration);
 builder.Services.AddMassTransit(builder.Configuration);
-builder.Services.AddSingleton<IPaymentProvider, ExternalPaymentProvider>();
-builder.Services.AddSingleton<IPaymentRepository, PaymentRepository>();
+
+var awsOptions = builder.Configuration.GetAWSOptions();
+builder.Services.AddInfra(builder.Configuration, builder.Environment, options =>
+{
+    options.Credentials = awsOptions.Credentials;
+    options.Region = awsOptions.Region;
+    options.BillingMode = BillingMode.PAY_PER_REQUEST;
+    options.TableName = TableNames.PAYMENTS_TABLE;
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -22,4 +32,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 app.MapControllers();
+
+app.InitDynamoDb();
 app.Run();
+
