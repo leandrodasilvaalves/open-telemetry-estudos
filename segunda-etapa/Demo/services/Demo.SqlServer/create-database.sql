@@ -1,3 +1,8 @@
+CREATE DATABASE demo_productstock_api
+GO
+USE demo_productstock_api
+GO
+
 IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
 BEGIN
     CREATE TABLE [__EFMigrationsHistory] (

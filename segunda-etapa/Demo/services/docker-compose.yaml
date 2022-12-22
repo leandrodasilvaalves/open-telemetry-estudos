@@ -1,7 +1,7 @@
 version: '3.4'
 
 networks:
-  demo:
+  demo.e-shopping:
     driver: bridge
     
 services:
@@ -22,7 +22,7 @@ services:
       - EmailOptions__EmaiFrom=${EMAIL_FROM}
       - EmailOptions__EnableSsl=${EMAIL_USE_SSL}
     networks:
-      - demo
+      - demo.e-shopping
     depends_on:
       - rabbitmq
 
@@ -41,7 +41,7 @@ services:
       - AWS__SecretKey=${AWS_SECRET_ACCESS_KEY}
       - AWS__ServiceURL=${AWS_SERVICE_URL}
     networks:
-      - demo
+      - demo.e-shopping
     depends_on:
       - rabbitmq
 
@@ -60,7 +60,7 @@ services:
     ports:
       - 7143:80
     networks:
-      - demo
+      - demo.e-shopping
     depends_on:
       - rabbitmq
 
@@ -80,7 +80,7 @@ services:
     ports:
       - 7235:80
     networks:
-      - demo
+      - demo.e-shopping
     depends_on:
       - rabbitmq
     
@@ -91,18 +91,22 @@ services:
       - 15672:15672
       - 5672:5672
     networks:
-      - demo
+      - demo.e-shopping
 
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2017-CU20-ubuntu-16.04
+    image: ${PROJECT_NAME}.mcr.microsoft.com/mssql/server:2017-CU20-ubuntu-16.04
     container_name: ${PROJECT_NAME}.sqlserver
+    build:
+      context: ./Demo.SqlServer
+      dockerfile: Dockerfile
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=${SQL_SERVER_SA_PASSWORD}
+      - SLEEP_TIME=${SQL_INIT_SLEEP}
     ports:
       - 1433:1433
     networks:
-      - demo
+      - demo.e-shopping
 
   mongodb:
     image: mongo:latest
@@ -113,7 +117,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${MONOG_PASSWORD}    
     networks:
-      - demo
+      - demo.e-shopping
 
   redis:    
     image: redis
@@ -123,7 +127,7 @@ services:
     environment:
       - REDIS_REPLICATION_MODE=master    
     networks:
-      - demo
+      - demo.e-shopping
 
   dynamodb:
     image: amazon/dynamodb-local
@@ -134,7 +138,7 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
     networks:
-      - demo
+      - demo.e-shopping
 
   dynamodb-admin:
     depends_on: 
@@ -148,7 +152,7 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
     networks:
-      - demo
+      - demo.e-shopping
 
   external-providers-mock:
     image: natenho/mockaco
@@ -158,4 +162,4 @@ services:
     volumes:
       - ../mocks:/app/Mocks:ro
     networks:
-      - demo
+      - demo.e-shopping
