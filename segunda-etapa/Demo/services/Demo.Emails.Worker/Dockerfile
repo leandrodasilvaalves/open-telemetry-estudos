@@ -5,9 +5,13 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0.302 AS build
 WORKDIR /build
 COPY ./Demo.Emails.Worker/Demo.Emails.Worker.csproj ./Demo.Emails.Worker/Demo.Emails.Worker.csproj
 COPY ./Demo.SharedModel/Demo.SharedModel.csproj ./Demo.SharedModel/Demo.SharedModel.csproj
+COPY ./Demo.OpenTelemetry/Demo.OpenTelemetry.csproj ./Demo.OpenTelemetry/Demo.OpenTelemetry.csproj
+
 RUN dotnet restore ./Demo.Emails.Worker/Demo.Emails.Worker.csproj
+
 COPY ./Demo.Emails.Worker/. ./Demo.Emails.Worker/
 COPY ./Demo.SharedModel/. ./Demo.SharedModel/
+COPY ./Demo.OpenTelemetry/. ./Demo.OpenTelemetry/
 RUN dotnet publish ./Demo.Emails.Worker/Demo.Emails.Worker.csproj -c Release -o /app
 
 FROM base AS final

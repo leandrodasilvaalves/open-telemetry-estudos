@@ -18,6 +18,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Demo.SharedModel\Demo.SharedModel.csproj" />
+        <ProjectReference Include="..\Demo.OpenTelemetry\Demo.OpenTelemetry.csproj" />
     </ItemGroup>
 
 </Project>

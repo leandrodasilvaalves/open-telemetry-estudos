@@ -3,9 +3,10 @@ using Demo.ProductStock.Api.Infra.Context;
 using Demo.ProductStock.Api.Infra.Providers;
 using Demo.ProductStock.Api.Infra.Repository;
 using Microsoft.EntityFrameworkCore;
-using Demo.SharedModel.Config;
+using Demo.OpenTelemetry.Config;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddOpenTelemetry();
 
 builder.Services.AddDbContext<ProductDbContext>(opt => 
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

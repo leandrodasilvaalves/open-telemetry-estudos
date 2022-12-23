@@ -3,6 +3,8 @@ version: '3.4'
 networks:
   demo.e-shopping:
     driver: bridge
+  demo.otel.collector:
+    driver: bridge
     
 services:
   emails:
@@ -21,8 +23,10 @@ services:
       - EmailOptions__Password=${EMAIL_PASSWORD}
       - EmailOptions__EmaiFrom=${EMAIL_FROM}
       - EmailOptions__EnableSsl=${EMAIL_USE_SSL}
+      - OpenTelemetryOptions__CollectorUrl=${OTEL_COLLECTOR_URL}
     networks:
       - demo.e-shopping
+      - demo.otel.collector
     depends_on:
       - rabbitmq
 
@@ -40,8 +44,10 @@ services:
       - AWS__AccessKey=${AWS_ACCESS_KEY_ID}
       - AWS__SecretKey=${AWS_SECRET_ACCESS_KEY}
       - AWS__ServiceURL=${AWS_SERVICE_URL}
+      - OpenTelemetryOptions__CollectorUrl=${OTEL_COLLECTOR_URL}
     networks:
       - demo.e-shopping
+      - demo.otel.collector
     depends_on:
       - rabbitmq
 
@@ -57,10 +63,12 @@ services:
       - RabbitMQCluster__Hosts__0=${RABBITMQ_HOSTS}
       - RedisConfig__ConnectionString=${REDIS_CONNECTION}
       - MongoConfig__ConnectionString=${MONGO_CONNECTION}
+      - OpenTelemetryOptions__CollectorUrl=${OTEL_COLLECTOR_URL}
     ports:
       - 7143:80
     networks:
       - demo.e-shopping
+      - demo.otel.collector
     depends_on:
       - rabbitmq
 
@@ -77,10 +85,12 @@ services:
       - SQL_SERVER_SA_PASSWORD
       - ConnectionStrings__DefaultConnection=${SQLSERVER_CONNECTION}
       - LogisticProviderOptions__Url=${LOGISTIC_PROVIDER_URL}
+      - OpenTelemetryOptions__CollectorUrl=${OTEL_COLLECTOR_URL}
     ports:
       - 7235:80
     networks:
       - demo.e-shopping
+      - demo.otel.collector
     depends_on:
       - rabbitmq
     
@@ -163,3 +173,37 @@ services:
       - ../mocks:/app/Mocks:ro
     networks:
       - demo.e-shopping
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.23.0
+    container_name: ${PROJECT_NAME}.collector
+    command: [ "--config=/etc/otel-collector-config.yml" ]
+    volumes:
+      - ./Demo.Collector/config.yaml:/etc/otel-collector-config.yml:ro
+    ports:
+      - "4317:4317"    
+    networks:
+      - demo.e-shopping
+      - demo.otel.collector
+    depends_on:
+      - jaeger
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: ${PROJECT_NAME}.jaeger
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=9411
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - 6831:6831/udp
+      - 6832:6832/udp
+      - 5778:5778
+      - 16686:16686 #web-port
+      - 4316:4317
+      - 4318:4318
+      - 14250:14250
+      - 14268:14268
+      - 14269:14269
+      - 9411:9411
+    networks:
+      - demo.otel.collector
