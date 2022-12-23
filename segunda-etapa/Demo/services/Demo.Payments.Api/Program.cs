@@ -1,10 +1,11 @@
 using Amazon.DynamoDBv2;
+using Demo.OpenTelemetry.Config;
 using Demo.Payments.Api.Config;
 using Demo.Payments.Api.Infra.DbContext.DynamoDb.Tables;
 using Demo.Payments.Api.Infra.Extensions;
-using Demo.SharedModel.Config;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddOpenTelemetry();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddOptions<PaymentProviderOptions>(builder.Configuration);

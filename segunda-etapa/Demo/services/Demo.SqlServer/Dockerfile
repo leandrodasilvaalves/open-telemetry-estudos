@@ -6,6 +6,7 @@ WORKDIR /usr/src/app
 COPY . /usr/src/app
 
 RUN chmod +x /usr/src/app/run-initialization.sh
+VOLUME /usr/src/app
 
 ENV SA_PASSWORD 123@Mudar
 ENV ACCEPT_EULA Y

@@ -1,0 +1,38 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+processors:
+  batch:
+    timeout: 10s
+
+exporters:
+  logging:
+    logLevel: debug
+
+  jaeger:
+    endpoint: jaeger:14250
+    insecure: true
+
+extensions:
+  health_check:
+
+service:
+  extensions: [health_check]
+
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging, jaeger]
+
+    # metrics:
+    #   receivers: [otlp]
+    #   exporters: [logging]
+
+    # logs:
+    #   receivers: [otlp]
+    #   processors: [batch]
+    #   exporters: [otlp/elastic]
