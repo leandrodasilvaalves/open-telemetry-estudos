@@ -1,10 +1,10 @@
+using Demo.OpenTelemetry.Config;
 using Demo.ProductCatalog.Api.Config;
 using Demo.ProductCatalog.Api.Infra.Cache;
 using Demo.ProductCatalog.Api.Infra.Repository;
-using Demo.SharedModel.Config;
-
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddOpenTelemetry();
 
 builder.Services.AddOptions<MongoConfig>(builder.Configuration);
 builder.Services.AddSingleton<IProductRepository, ProductRepository>();

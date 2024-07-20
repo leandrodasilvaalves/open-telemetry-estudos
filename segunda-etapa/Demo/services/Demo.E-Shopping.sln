@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.SharedModel", "Demo.Sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Emails.Worker", "Demo.Emails.Worker\Demo.Emails.Worker.csproj", "{518AC071-2252-4C0D-B750-651E1ABE4DE7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.OpenTelemetry", "Demo.OpenTelemetry\Demo.OpenTelemetry.csproj", "{E3182FBA-1814-4341-AE0A-8507E51288D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{518AC071-2252-4C0D-B750-651E1ABE4DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{518AC071-2252-4C0D-B750-651E1ABE4DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{518AC071-2252-4C0D-B750-651E1ABE4DE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3182FBA-1814-4341-AE0A-8507E51288D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3182FBA-1814-4341-AE0A-8507E51288D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3182FBA-1814-4341-AE0A-8507E51288D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3182FBA-1814-4341-AE0A-8507E51288D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

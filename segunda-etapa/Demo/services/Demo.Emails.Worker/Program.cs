@@ -1,14 +1,14 @@
 using Demo.Emails.Worker.Config;
 using Demo.Emails.Worker.Infra;
-using Demo.SharedModel.Config;
+using Demo.OpenTelemetry.Config;
 
-IHost host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices((host, services) =>
-    {
-        services.AddOptions<EmailOptions>(host.Configuration);
-        services.AddSingleton<IEmailSenderProvider, EmailSenderProvider>();
-        services.AddMassTransit(host.Configuration);
-    })
-    .Build();
+var builder = WebApplication.CreateBuilder(args);
+builder.AddOpenTelemetry();
 
-await host.RunAsync();
+builder.Services.AddOptions<EmailOptions>(builder.Configuration);
+builder.Services.AddSingleton<IEmailSenderProvider, EmailSenderProvider>();
+builder.Services.AddMassTransit(builder.Configuration);
+
+var app = builder.Build();
+app.Run();
+
